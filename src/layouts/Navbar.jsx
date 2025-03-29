@@ -1,69 +1,207 @@
-import getGreetingMessage from '../utils/greetingHandler';
+import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useTheme } from "../contexts/ThemeContext";
+import { useAuth } from "../contexts/AuthContext";
+import NotificationBell from "../components/NotificationBell";
+import getGreetingMessage from "../utils/greetingHandler";
+
 const Navbar = () => {
+  const { darkMode, toggleDarkMode } = useTheme();
+  const { user, logout } = useAuth();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Get first name if full name is available
+  const firstName = user?.name ? user.name.split(" ")[0] : "User";
+  const greetingMessage = getGreetingMessage(firstName);
+
+  // Handle clicking outside of dropdown to close it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Handle logout
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      await logout();
+      // Redirect handled by auth context
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <nav
-      className="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
-      id="layout-navbar">
+      className={`layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center ${
+        darkMode ? "bg-dark-navbar text-white" : "bg-navbar-theme"
+      }`}
+      id="layout-navbar"
+    >
+      {/* Mobile Menu Toggle */}
       <div className="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-        <a aria-label='toggle for sidebar' className="nav-item nav-link px-0 me-xl-4" href="#">
+        <a
+          aria-label="toggle sidebar"
+          className="nav-item nav-link px-0 me-xl-4"
+          href="#"
+        >
           <i className="bx bx-menu bx-sm"></i>
         </a>
       </div>
 
-      <div className="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-        {getGreetingMessage('Dwi')}
+      {/* Main Navbar Content */}
+      <div
+        className={`navbar-nav-right d-flex align-items-center ${
+          darkMode ? "text-white" : ""
+        }`}
+        id="navbar-collapse"
+      >
+        {/* Greeting Section */}
+        <div className="d-flex align-items-center me-auto">
+          {greetingMessage}
+        </div>
+
+        {/* Right-aligned items */}
         <ul className="navbar-nav flex-row align-items-center ms-auto">
-          <li className="nav-item navbar-dropdown dropdown-user dropdown">
-            <a aria-label='dropdown profile avatar' className="nav-link dropdown-toggle hide-arrow" href="#" data-bs-toggle="dropdown">
-              <div className="avatar avatar-online">
-                <img src="../assets/img/avatars/1.png" className="w-px-40 h-auto rounded-circle" alt="avatar-image" aria-label='Avatar Image'/>
+          {/* Notification Bell */}
+          <li className="nav-item me-3">
+            <div className="nav-link position-relative">
+              <NotificationBell />
+            </div>
+          </li>
+
+          {/* User Dropdown */}
+          <li
+            className="nav-item navbar-dropdown dropdown-user dropdown"
+            ref={dropdownRef}
+          >
+            <a
+              aria-label="User profile"
+              className="nav-link dropdown-toggle hide-arrow"
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsDropdownOpen(!isDropdownOpen);
+              }}
+              aria-expanded={isDropdownOpen}
+            >
+              <div className="avatar">
+                <img
+                  src={
+                    user?.profile?.profilePhoto || "../assets/img/avatars/1.png"
+                  }
+                  className="rounded-circle"
+                  style={{
+                    maxWidth: "40px",
+                    width: "40px",
+                    height: "40px",
+                    objectFit: "cover",
+                  }}
+                  alt="User avatar"
+                />
               </div>
             </a>
-            <ul className="dropdown-menu dropdown-menu-end">
+            <ul
+              className={`dropdown-menu dropdown-menu-end ${
+                darkMode ? "dropdown-menu-dark" : ""
+              } ${isDropdownOpen ? "show" : ""}`}
+              style={{
+                position: "absolute",
+                inset: "0px 0px auto auto",
+                margin: "0px",
+                transform: "translate3d(0px, 40px, 0px)",
+              }}
+            >
               <li>
-                <a aria-label='go to profile' className="dropdown-item" href="#">
+                <div className="dropdown-item">
                   <div className="d-flex">
                     <div className="flex-shrink-0 me-3">
-                      <div className="avatar avatar-online">
-                        <img src="../assets/img/avatars/1.png" className="w-px-40 h-auto rounded-circle" alt='avatar-image' aria-label='Avatar Image' />
+                      <div className="avatar">
+                        <img
+                          src={
+                            user?.profile?.profilePhoto ||
+                            "../assets/img/avatars/1.png"
+                          }
+                          className="rounded-circle"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            objectFit: "cover",
+                          }}
+                          alt="User avatar"
+                        />
                       </div>
                     </div>
                     <div className="flex-grow-1">
-                      <span className="fw-medium d-block">John Doe</span>
-                      <small className="text-muted">Admin</small>
+                      <span className="fw-medium d-block">
+                        {user?.name || "User"}
+                      </span>
+                      <small className="text-muted">
+                        {user?.role || "Author"}
+                      </small>
                     </div>
                   </div>
-                </a>
+                </div>
               </li>
               <li>
                 <div className="dropdown-divider"></div>
               </li>
               <li>
-                <a aria-label='go to profile' className="dropdown-item" href="#">
+                <Link
+                  className="dropdown-item"
+                  to="/Details"
+                  onClick={() => setIsDropdownOpen(false)}
+                >
                   <i className="bx bx-user me-2"></i>
                   <span className="align-middle">My Profile</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a aria-label='go to setting' className="dropdown-item" href="#">
-                  <i className="bx bx-cog me-2"></i>
-                  <span className="align-middle">Settings</span>
-                </a>
+                <Link
+                  className="dropdown-item"
+                  to="/books"
+                  onClick={() => setIsDropdownOpen(false)}
+                >
+                  <i className="bx bx-book-content me-2"></i>
+                  <span className="align-middle">My Books</span>
+                </Link>
               </li>
               <li>
-                <a aria-label='go to billing' className="dropdown-item" href="#">
-                  <span className="d-flex align-items-center align-middle">
-                    <i className="flex-shrink-0 bx bx-credit-card me-2"></i>
-                    <span className="flex-grow-1 align-middle ms-1">Billing</span>
-                    <span className="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-                  </span>
-                </a>
+                <Link
+                  className="dropdown-item"
+                  to="/PayoutRequest"
+                  onClick={() => setIsDropdownOpen(false)}
+                >
+                  <i className="bx bx-money me-2"></i>
+                  <span className="align-middle">Payouts</span>
+                </Link>
               </li>
+              {user?.role === "admin" && (
+                <li>
+                  <Link
+                    className="dropdown-item"
+                    to="/admin"
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    <i className="bx bx-shield me-2"></i>
+                    <span className="align-middle">Admin Panel</span>
+                  </Link>
+                </li>
+              )}
               <li>
                 <div className="dropdown-divider"></div>
               </li>
               <li>
-                <a aria-label='click to log out' className="dropdown-item" href="#">
+                <a className="dropdown-item" href="#" onClick={handleLogout}>
                   <i className="bx bx-power-off me-2"></i>
                   <span className="align-middle">Log Out</span>
                 </a>
@@ -72,7 +210,26 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
+
+      {/* Responsive Styles */}
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .navbar-nav-right {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          .navbar-nav {
+            flex-direction: column;
+            width: 100%;
+          }
+          .nav-item {
+            width: 100%;
+            text-align: left;
+          }
+        }
+      `}</style>
     </nav>
   );
-}
+};
+
 export default Navbar;

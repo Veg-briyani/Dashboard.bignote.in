@@ -1,0 +1,276 @@
+/* Dark mode styles */
+.dark-mode {
+  --bg-main: #283046;
+  --text-main: #d0d2d6;
+  --text-secondary: #8a919c;
+  --border-color: #404656;
+  --sidebar-bg: #1a233a;
+  --card-bg: #2b3547;
+  --input-bg: #161d31;
+  --menu-item-hover: #101627;
+  --table-header-bg: #1a233a;
+  --chart-bg: #1a233a;
+}
+
+/* Background colors */
+.dark-mode body,
+.dark-mode .layout-page,
+.dark-mode .layout-wrapper {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+}
+
+/* Menu and sidebar */
+.dark-mode .bg-menu-theme,
+.dark-mode .menu-vertical,
+.dark-mode .layout-menu {
+  background-color: var(--sidebar-bg) !important;
+}
+
+.dark-mode .menu-item a:hover {
+  background-color: var(--menu-item-hover) !important;
+}
+
+/* Cards and containers */
+.dark-mode .card,
+.dark-mode .navbar,
+.dark-mode .footer-light,
+.dark-mode .bg-white {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Form elements */
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea,
+.dark-mode .form-control,
+.dark-mode .input-group-text {
+  background-color: var(--input-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+/* Tables */
+.dark-mode .table {
+  color: var(--text-main);
+  background-color: var(--card-bg);
+}
+
+.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Text colors */
+.dark-mode .text-dark,
+.dark-mode .menu-link,
+.dark-mode p,
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6,
+.dark-mode .card-title,
+.dark-mode .nav-link,
+.dark-mode .dropdown-item,
+.dark-mode label,
+.dark-mode .form-label {
+  color: var(--text-main) !important;
+}
+
+.dark-mode .text-muted,
+.dark-mode .text-body-secondary {
+  color: var(--text-secondary) !important;
+}
+
+/* Additional text color overrides */
+.dark-mode .menu-inner .menu-item .menu-link {
+  color: var(--text-main) !important;
+}
+
+.dark-mode .navbar-nav .nav-link {
+  color: var(--text-main) !important;
+}
+
+.dark-mode .card-header {
+  color: var(--text-main) !important;
+}
+
+.dark-mode .dropdown-menu {
+  color: var(--text-main) !important;
+}
+
+.dark-mode .btn {
+  color: var(--text-main) !important;
+}
+
+/* Borders */
+.dark-mode .border,
+.dark-mode .border-top,
+.dark-mode .border-bottom,
+.dark-mode .border-left,
+.dark-mode .border-right {
+  border-color: var(--border-color) !important;
+}
+
+/* Dropdowns */
+.dark-mode .dropdown-menu {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.dark-mode .dropdown-item:hover {
+  background-color: var(--menu-item-hover);
+}
+/* Add these new styles to your existing dark-mode.css */
+.dark-mode .bg-dark-navbar {
+  background-color: var(--card-bg) !important;
+  color: var(--text-main) !important;
+}
+
+.dark-mode .menu-inner .menu-item .menu-link {
+  color: var(--text-main) !important;
+}
+
+.dark-mode .menu-inner .menu-item .menu-link:hover {
+  background-color: var(--menu-item-hover) !important;
+}
+
+.dark-mode .dropdown-item {
+  color: var(--text-main) !important;
+}
+
+.dark-mode .dropdown-item:hover {
+  background-color: var(--menu-item-hover) !important;
+}
+
+.dark-mode .text-muted {
+  color: #8a919c !important;
+}
+
+.dark-mode .badge {
+  border: 1px solid var(--border-color);
+}
+
+/* Books Inventory & Sales specific styles */
+.dark-mode .inventory-card,
+.dark-mode .sales-card {
+  background-color: var(--card-bg) !important;
+  color: var(--text-main) !important;
+}
+
+.dark-mode .book-item,
+.dark-mode .sale-record {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+.dark-mode .stats-card {
+  background-color: var(--card-bg) !important;
+  color: var(--text-main) !important;
+}
+
+.dark-mode .inventory-table,
+.dark-mode .sales-table {
+  background-color: var(--card-bg) !important;
+  color: var(--text-main) !important;
+}
+
+.dark-mode .inventory-table th,
+.dark-mode .sales-table th {
+  background-color: var(--sidebar-bg) !important;
+  color: var(--text-main) !important;
+}
+
+.dark-mode .inventory-table td,
+.dark-mode .sales-table td {
+  color: var(--text-main) !important;
+  border-color: var(--border-color) !important;
+}
+
+.dark-mode .search-input,
+.dark-mode .filter-select {
+  background-color: var(--input-bg) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-color) !important;
+}
+
+.dark-mode .stats-value {
+  color: var(--text-main) !important;
+}
+
+.dark-mode .stats-label {
+  color: var(--text-secondary) !important;
+}
+
+.dark-mode .chart-container {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+/* Enhanced Table Styles for Dark Mode */
+.dark-mode .table {
+  color: var(--text-main) !important;
+}
+
+.dark-mode .table th {
+  background-color: var(--table-header-bg);
+  color: var(--text-main) !important;
+}
+
+.dark-mode .table td {
+  color: var(--text-main) !important;
+}
+
+.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .table-hover tbody tr:hover {
+  background-color: var(--menu-item-hover) !important;
+  color: var(--text-main) !important;
+}
+
+.dark-mode .table a {
+  color: var(--text-main) !important;
+}
+
+.dark-mode .datatable-header,
+.dark-mode .datatable-footer {
+  color: var(--text-main) !important;
+}
+
+.dark-mode .page-item.active .page-link {
+  background-color: var(--sidebar-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+.dark-mode .page-link {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+/* Remove book cover shadows in dark mode */
+.dark-mode .inventory-table .book-cover,
+.dark-mode .book-cover img {
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+}
+
+.dark-mode .inventory-table .book-thumbnail {
+  box-shadow: none !important;
+  border: 1px solid var(--border-color);
+}
+
+/* Charts */
+.dark-mode .apexcharts-grid line {
+  stroke: var(--border-color);
+}
+
+.dark-mode .apexcharts-tooltip {
+  background: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}

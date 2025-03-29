@@ -1,0 +1,63 @@
+/* Optional CSS styles you can add to your stylesheet */
+
+.dropdown-notifications-item {
+    padding: 0.85rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .dropdown-notifications-item:hover {
+    background-color: rgba(105, 108, 255, 0.05);
+  }
+  
+  .dropdown-notifications-actions {
+    display: flex;
+    align-items: center;
+    padding-left: 0.875rem;
+  }
+  
+  .scrollable-container {
+    position: relative;
+    max-height: 420px;
+    overflow: hidden;
+  }
+  
+  .scrollable-content {
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+  
+  .scrollable-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollable-content::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+  }
+  
+  .dropdown-notifications-all {
+    padding: 0 0.5rem;
+  }
+  
+  .dropdown-notifications-all:hover {
+    color: #696cff !important;
+  }
+  
+  .avatar-sm {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .bg-label-primary {
+    background-color: rgba(105, 108, 255, 0.16) !important;
+    color: #696cff !important;
+  }
+  
+  .bg-label-secondary {
+    background-color: rgba(168, 170, 174, 0.16) !important;
+    color: #a8aaae !important;
+  }

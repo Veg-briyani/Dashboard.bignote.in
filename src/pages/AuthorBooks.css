@@ -1,0 +1,118 @@
+
+/* Core Styles */
+.book-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+    overflow: hidden;
+  }
+  
+  .book-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Book Cover Styling */  
+  .book-cover-wrapper {
+    position: relative;
+    display: inline-block;
+    perspective: 1000px;
+  }
+  
+  .book-cover {
+    height: 180px;
+    width: 130px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transform-style: preserve-3d;
+  }
+  
+  .book-cover-wrapper:hover .book-cover {
+    transform: rotateY(10deg);
+  }
+  
+  .book-hover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .book-cover-wrapper:hover .book-hover-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .book-title {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    color: #333;
+  }
+  
+  /* Marketplace Buttons */
+  .btn-amazon {
+    border-width: 2px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-amazon:hover {
+    background-color: #ff9900;
+    border-color: #ff9900;
+    color: white;
+  }
+  
+  .btn-flipkart {
+    border-width: 2px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-flipkart:hover {
+    background-color: #047bd5;
+    border-color: #047bd5;
+    color: white;
+  }
+  
+  /* Performance Metrics */
+  .performance-metrics {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) inset;
+  }
+  
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 767px) {
+    .book-cover {
+      height: 160px;
+      width: 115px;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .book-details > div {
+      transition: transform 0.2s ease;
+    }
+    
+    .book-details > div:hover {
+      transform: translateX(5px);
+    }
+  }
+  
+  
