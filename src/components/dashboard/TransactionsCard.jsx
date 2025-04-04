@@ -17,16 +17,21 @@ export const TransactionsCard = () => {
       setLoading(true);
       setError(null);
       try {
-        // Updated to use the provided endpoint
-        const response = await axios.get(`http://localhost:5000/api/author/fake-purchases?page=${currentPage}&timeframe=${timeframe}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+        // Use the environment variable for the API URL
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_API_URL
+          }/author/fake-purchases?page=${currentPage}&timeframe=${timeframe}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
-        });
-        
+        );
+
         // Set API response for debug mode
         setApiResponse(response);
-        
+
         // Check if response has the structure shown in your example
         if (response.data && response.data.purchases) {
           setPurchases(response.data.purchases);
@@ -39,14 +44,14 @@ export const TransactionsCard = () => {
           setPurchases([]);
         }
       } catch (error) {
-        console.error('Error fetching purchases:', error);
-        setError(error.response?.data?.message || 'Failed to load purchases');
+        console.error("Error fetching purchases:", error);
+        setError(error.response?.data?.message || "Failed to load purchases");
         setPurchases([]);
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchPurchases();
   }, [timeframe, currentPage]);
 

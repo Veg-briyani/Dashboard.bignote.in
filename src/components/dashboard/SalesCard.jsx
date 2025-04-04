@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { getApiUrl, getAuthHeaders } from "../../services/apiConfig";
 
 export const SalesCard = () => {
   const [salesData, setSalesData] = useState({
@@ -10,9 +11,8 @@ export const SalesCard = () => {
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5000/api/books/dashboard", {
-          headers: { Authorization: `Bearer ${token}` }
+        const response = await axios.get(getApiUrl("books/dashboard"), {
+          headers: getAuthHeaders()
         });
 
         setSalesData({

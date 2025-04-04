@@ -3,6 +3,7 @@ import { StarFill } from "react-bootstrap-icons";
 import { getBookCover } from '../utils/imageUtils';
 import '../pages/AuthorBooks.css';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl, getFetchOptions } from "../services/apiConfig";
 
 export const AuthorBooks = () => {
   const [books, setBooks] = useState([]);
@@ -16,7 +17,7 @@ export const AuthorBooks = () => {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Authentication token not found");
 
-        const response = await fetch("http://localhost:5000/api/books", {
+        const response = await fetch(getApiUrl("books"), {
           headers: { Authorization: `Bearer ${token}` },
         });
         
@@ -92,7 +93,6 @@ export const AuthorBooks = () => {
         </div>
         <div className="col-md-4 d-flex justify-content-md-end mt-3 mt-md-0">
           <button 
-            onClick={() => navigate('/AuthorBookPurchase')}
             className="btn btn-primary px-4 py-2 shadow-sm animate__animated animate__fadeIn animate__delay-2s"
           >
             <i className="bx bx-shopping-bag me-2"></i> Order Book

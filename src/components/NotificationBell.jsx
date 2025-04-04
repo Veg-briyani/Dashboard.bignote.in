@@ -1,9 +1,10 @@
-
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { formatDistanceToNow } from 'date-fns';
 import 'boxicons/css/boxicons.min.css';
 import './NotificationBell.css';
+import { getApiUrl, getAuthHeaders } from '../services/apiConfig';
+
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,13 +14,8 @@ const NotificationBell = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        // Get token from localStorage
-        const token = localStorage.getItem('token');
-        
-        const response = await axios.get('http://localhost:5000/api/notifications', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+        const response = await axios.get(getApiUrl('notifications'), {
+          headers: getAuthHeaders()
         });
         
         if (response.data && Array.isArray(response.data)) {
@@ -61,12 +57,8 @@ const NotificationBell = () => {
   // Mark notification as read
   const markAsRead = async (notificationId) => {
     try {
-      const token = localStorage.getItem('token');
-      
-      await axios.patch(`http://localhost:5000/api/notifications/${notificationId}/read`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+      await axios.patch(getApiUrl(`notifications/${notificationId}/read`), {}, {
+        headers: getAuthHeaders()
       });
       
       // Update local state

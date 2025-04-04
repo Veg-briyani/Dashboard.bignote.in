@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { getApiUrl, getAuthHeaders } from "../../services/apiConfig";
 import {
   Bar,
   BarChart,
@@ -19,9 +20,8 @@ export const RevenueChart = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5000/api/auth/profile", {
-          headers: { Authorization: `Bearer ${token}` }
+        const response = await axios.get(getApiUrl("auth/profile"), {
+          headers: getAuthHeaders()
         });
 
         const { yearlyPerformance } = response.data;

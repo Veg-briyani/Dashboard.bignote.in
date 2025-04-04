@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { getApiUrl, getAuthHeaders } from "../../services/apiConfig";
 
 export const TransactionStatsCard = () => {
   const [royaltyData, setRoyaltyData] = useState({
@@ -12,28 +13,26 @@ export const TransactionStatsCard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Verify that the authentication token exists.
         const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("Authentication token not found");
+        }
 
-        // Get profile data for royaltyReceived
-        const profileResponse = await axios.get(
-          "http://localhost:5000/api/auth/profile",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        // Fetch profile data for royaltyReceived using the API config
+        const profileResponse = await axios.get(getApiUrl("auth/profile"), {
+          headers: getAuthHeaders(),
+        });
 
-        // Extract royaltyReceived from profile response
+        // Extract royaltyReceived from the profile response
         const { royaltyReceived } = profileResponse.data;
 
-        // Get payout history for calculating approved payouts total
-        const payoutsResponse = await axios.get(
-          "http://localhost:5000/api/royalties",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        // Fetch payout history for calculating total approved payouts
+        const payoutsResponse = await axios.get(getApiUrl("royalties"), {
+          headers: getAuthHeaders(),
+        });
 
-        // Calculate total of approved payouts
+        // Calculate total approved payouts (status "approved" or "completed")
         const approvedPayouts = payoutsResponse.data
           .filter(
             (payout) =>
@@ -50,11 +49,27 @@ export const TransactionStatsCard = () => {
         });
       } catch (error) {
         console.error("Error fetching data:", error);
+        let errorMessage = "Failed to load royalty data";
+
+        if (error.response) {
+          // Server responded with an error status code
+          errorMessage =
+            error.response.data?.message ||
+            `Server error: ${error.response.status}`;
+        } else if (error.request) {
+          // Request made but no response received
+          errorMessage =
+            "Unable to connect to server. Please check your internet connection.";
+        } else {
+          // Error setting up the request
+          errorMessage = error.message;
+        }
+
         setRoyaltyData({
           royaltyReceived: 0,
           approvedPayouts: 0,
           loading: false,
-          error: "Failed to load royalty data",
+          error: errorMessage,
         });
       }
     };
@@ -88,7 +103,7 @@ export const TransactionStatsCard = () => {
     );
   }
 
-  // Format amounts
+  // Helper to format amounts to 2 decimal places
   const formatAmount = (amount) => {
     return amount.toLocaleString(undefined, {
       minimumFractionDigits: 2,
@@ -96,12 +111,12 @@ export const TransactionStatsCard = () => {
     });
   };
 
-  // Calculate total (royalty received and approved payouts)
+  // Destructure amounts for display
   const totalEarnings = royaltyData.royaltyReceived;
   const totalPayouts = royaltyData.approvedPayouts;
 
   return (
-    <div className="col-6  mb-4">
+    <div className="col-6 mb-4">
       <div className="card">
         <div className="card-body">
           <div className="card-title d-flex align-items-start justify-content-between">
@@ -131,7 +146,7 @@ export const TransactionStatsCard = () => {
           </h3>
           <small className="text-muted fw-medium d-flex align-items-center">
             <i className="bx bx-money-withdraw me-1"></i>
-            Approved payout 
+            Approved payout
           </small>
         </div>
       </div>

@@ -53,6 +53,10 @@ const Navbar = () => {
           aria-label="toggle sidebar"
           className="nav-item nav-link px-0 me-xl-4"
           href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            // Implement your mobile menu toggle logic here if needed
+          }}
         >
           <i className="bx bx-menu bx-sm"></i>
         </a>
@@ -210,24 +214,6 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
-
-      {/* Responsive Styles */}
-      <style jsx>{`
-        @media (max-width: 768px) {
-          .navbar-nav-right {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-          .navbar-nav {
-            flex-direction: column;
-            width: 100%;
-          }
-          .nav-item {
-            width: 100%;
-            text-align: left;
-          }
-        }
-      `}</style>
     </nav>
   );
 };

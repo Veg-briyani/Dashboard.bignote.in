@@ -1,12 +1,11 @@
-import { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import Sidebar from './Sidebar';
-import Navbar from './Navbar';
+import { useEffect } from "react";
+import PropTypes from "prop-types";
+import Sidebar from "./Sidebar";
+import Navbar from "./Navbar";
 
 const Layout = ({ children }) => {
   useEffect(() => {
     // If you need to initialize something, add it here
-    // Removing the Main() call as it's undefined
   }, []);
 
   return (
@@ -27,7 +26,6 @@ const Layout = ({ children }) => {
   );
 };
 
-// Add PropTypes validation
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
 };

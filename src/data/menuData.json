@@ -1,52 +1,53 @@
 [
-    {
-        "header": "Main",
-        "items": [
-            {
-                "text": "Dashboard",
-                "icon": "bx bx-home",
-                "available": true,
-                "link": "/"
-            },
-            {
-                "text": "Books",
-                "icon": "bx bx-book",
-                "available": true,
-                "link": "/books"
-            },
-            {
-                "text": "Authors",
-                "icon": "bx bx-user",
-                "available": true,
-                "link": "/Details"
-            }
-        ]
-    },
-    {
-        "header": "Sales & Inventory",
-        "items": [
-            {
-                "text": "Inventory & Sales",
-                "icon": "bx bx-table",
-                "available": true,
-                "link": "/tables"
-            },
-            {
-                "text": "Author Copies",
-                "icon": "bx bx-book",
-                "available": true,
-                "link": "/AuthorBookPurchase"
-            }
-        ]
-    },
-    {
-        "header": "Financials",
-        "items": [
-            {
-                "text": "Payout Request",
-                "icon": "bx bxl-paypal",
-                "available": true,
-                "link": "/PayoutRequest"
-            }
-        ]}
+  {
+    "header": "Main",
+    "items": [
+      {
+        "text": "Dashboard",
+        "icon": "bx bx-home",
+        "available": true,
+        "link": "/dashboard"
+      },
+      {
+        "text": "Books",
+        "icon": "bx bx-book",
+        "available": true,
+        "link": "/books"
+      },
+      {
+        "text": "Authors",
+        "icon": "bx bx-user",
+        "available": true,
+        "link": "/Details"
+      }
+    ]
+  },
+  {
+    "header": "Sales & Inventory",
+    "items": [
+      {
+        "text": "Inventory & Sales",
+        "icon": "bx bx-table",
+        "available": true,
+        "link": "/tables"
+      },
+      {
+        "text": "Author Copies",
+        "icon": "bx bx-book",
+        "available": true,
+        "link": "/author-book-purchase"
+      }
+    ]
+  },
+  {
+    "header": "Financials",
+    "items": [
+      {
+        "text": "Payout Request",
+        "icon": "bx bxl-paypal",
+        "available": true,
+        "link": "/payout-request"
+      }
+    ]
+  }
 ]

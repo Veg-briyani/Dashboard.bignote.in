@@ -1,170 +1,195 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function PayoutRequest() {
   // State for tabs
-  const [activeTab, setActiveTab] = useState('request')
-  
+  const [activeTab, setActiveTab] = useState('request');
+
   // State for payout request
-  const [amount, setAmount] = useState('')
-  const [paymentMethod, setPaymentMethod] = useState('bank_transfer')
-  const [successMessage, setSuccessMessage] = useState('')
-  
+  const [amount, setAmount] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('bank_transfer');
+  const [successMessage, setSuccessMessage] = useState('');
+
   // State for payout history
-  const [payouts, setPayouts] = useState([])
-  const [filterStatus, setFilterStatus] = useState('all')
-  
+  const [payouts, setPayouts] = useState([]);
+  const [filterStatus, setFilterStatus] = useState('all');
+
   // State for loading and errors
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   // State for balance
-  const [balance, setBalance] = useState(0)
-  
+  const [balance, setBalance] = useState(0);
+
   // API configuration
-  const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
-  const authToken = localStorage.getItem('token') || ''
-  
+  const baseUrl = import.meta.env.VITE_API_URL; // Use your provided API URL
+  const authToken = localStorage.getItem('token') || '';
+
   // Fetch payout history
   const fetchPayoutHistory = async () => {
-    setLoading(true)
-    setError(null)
-    
+    setLoading(true);
+    setError(null);
+
     try {
       const response = await axios.get(`${baseUrl}/royalties`, {
         headers: {
-          Authorization: `Bearer ${authToken}`
-        }
-      })
-      setPayouts(response.data)
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      setPayouts(response.data);
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Failed to fetch payout history'
-      setError(errorMessage)
-      console.error('Error fetching payout history:', err)
+      const errorMessage =
+        err.response?.data?.message || 'Failed to fetch payout history';
+      setError(errorMessage);
+      console.error('Error fetching payout history:', err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-  
+  };
+
   // Fetch balance
   const fetchBalance = async () => {
-    try {
-      // Fetch from profile API instead
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/auth/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      
-      // Extract wallet balance from profile response
-      const { walletBalance } = response.data;
-      setBalance(walletBalance || 0);
-    } catch (err) {
-      console.error('Error fetching balance:', err);
-    }
-  }
-  
+            try {
+              const token = localStorage.getItem('token');
+              if (!token) {
+                console.error('Authentication token not found.');
+                // Optionally set balance to 0 or handle the logged-out state
+                // setBalance(0); 
+                return; // Exit if no token
+              }
+          
+              // Construct the URL using the environment variable
+              const apiUrl = `${import.meta.env.VITE_API_URL}/auth/profile`; 
+              
+              console.log(`Workspaceing balance from: ${apiUrl}`); // Good for debugging
+          
+              const response = await axios.get(apiUrl, { // Use the constructed URL
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              });
+              
+              // Extract wallet balance from profile response
+              const { walletBalance } = response.data;
+              setBalance(walletBalance || 0);
+          
+            } catch (err) {
+              console.error('Error fetching balance:', err);
+              // Optional: Provide user feedback about the error
+              // For example, set an error state or display a message
+              // setErrorState('Failed to fetch balance.'); 
+              // setBalance(0); // Optionally reset balance on error
+            }
+          }
+
   // Submit payout request
   const submitPayoutRequest = async (e) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     // Add minimum amount validation
-    if (!amount || isNaN(amount) || Number(amount) < 10) {
-      setError('Minimum payout amount is ₹10')
-      return
+    if (!amount || isNaN(amount) || Number(amount) < 100) {
+      setError('Minimum payout amount is ₹100');
+      return;
     }
-    
-    setLoading(true)
-    setError(null)
-    
+
+    setLoading(true);
+    setError(null);
+
     try {
-      const response = await axios.post(`${baseUrl}/royalties/request`, {
-        amount: Number(amount),
-        paymentMethod: paymentMethod
-      }, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json'
+      const response = await axios.post(
+        `${baseUrl}/royalties/request`,
+        {
+          amount: Number(amount),
+          paymentMethod: paymentMethod,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
         }
-      })
-      
-      setSuccessMessage('Payout request submitted successfully!')
-      setAmount('')
+      );
+
+      setSuccessMessage('Payout request submitted successfully!');
+      setAmount('');
       // Refresh payout history after successful submission
-      await fetchPayoutHistory()
-      await fetchBalance()
-      
-      setTimeout(() => setSuccessMessage(''), 3000)
-      
+      await fetchPayoutHistory();
+      await fetchBalance();
+
+      setTimeout(() => setSuccessMessage(''), 3000);
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Failed to submit payout request'
-      setError(errorMessage)
-      console.error('Submission error:', err.response?.data)
+      const errorMessage =
+        err.response?.data?.message || 'Failed to submit payout request';
+      setError(errorMessage);
+      console.error('Submission error:', err.response?.data);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-  
+  };
+
   // Filtered payouts based on status
-  const filteredPayouts = filterStatus === 'all' 
-    ? payouts 
-    : payouts.filter(payout => payout.status.toLowerCase() === filterStatus.toLowerCase())
-  
+  const filteredPayouts =
+    filterStatus === 'all'
+      ? payouts
+      : payouts.filter(
+          (payout) => payout.status.toLowerCase() === filterStatus.toLowerCase()
+        );
+
   // Format date for display
   const formatDate = (dateString) => {
     if (!dateString) return '-';
-    const date = new Date(dateString)
+    const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
-    }).format(date)
-  }
-  
+      minute: '2-digit',
+    }).format(date);
+  };
+
   // Format amount for display
   const formatAmount = (amount) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
-      maximumFractionDigits: 0
-    }).format(amount)
-  }
-  
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
   // Get CSS class for status badges
   const getStatusClass = (status) => {
     switch (status.toLowerCase()) {
       case 'approved':
       case 'completed':
-        return 'bg-success'
+        return 'bg-success';
       case 'pending':
-        return 'bg-warning'
+        return 'bg-warning';
       case 'rejected':
-        return 'bg-danger'
+        return 'bg-danger';
       default:
-        return 'bg-secondary'
+        return 'bg-secondary';
     }
-  }
-  
+  };
+
   // Fetch payout history when tab changes
   useEffect(() => {
-    fetchBalance()
-    const abortController = new AbortController()
-    
+    fetchBalance();
+    const abortController = new AbortController();
+
     if (activeTab === 'history') {
-      fetchPayoutHistory()
+      fetchPayoutHistory();
     }
-    return () => abortController.abort()
-  }, [activeTab])
-  
+    return () => abortController.abort();
+  }, [activeTab]);
+
   return (
     <div className="container-xxl flex-grow-1 container-p-y">
       <h4 className="fw-bold py-3 mb-4">
         <span className="text-muted fw-light">Earnings /</span> Royalty Payouts
       </h4>
-      
+
       <div className="row">
         {/* Balance Cards */}
         <div className="col-md-6 col-lg-4 mb-4">
@@ -185,7 +210,7 @@ function PayoutRequest() {
             </div>
           </div>
         </div>
-        
+
         {/* Main Content */}
         <div className="col-12">
           <div className="card mb-4">
@@ -215,7 +240,7 @@ function PayoutRequest() {
                 </li>
               </ul>
             </div>
-            
+
             <div className="card-body">
               {/* Alert Messages */}
               {error && (
@@ -224,35 +249,35 @@ function PayoutRequest() {
                     <i className="bx bx-error-circle fs-5 me-2"></i>
                     <div>{error}</div>
                   </div>
-                  <button 
-                    type="button" 
-                    className="btn-close" 
+                  <button
+                    type="button"
+                    className="btn-close"
                     onClick={() => setError(null)}
                     aria-label="Close"
                   ></button>
                 </div>
               )}
-              
+
               {successMessage && (
                 <div className="alert alert-success alert-dismissible mb-4" role="alert">
                   <div className="d-flex">
                     <i className="bx bx-check-circle fs-5 me-2"></i>
                     <div>{successMessage}</div>
                   </div>
-                  <button 
-                    type="button" 
-                    className="btn-close" 
+                  <button
+                    type="button"
+                    className="btn-close"
                     onClick={() => setSuccessMessage('')}
                     aria-label="Close"
                   ></button>
                 </div>
               )}
-              
+
               {/* Request Payout Tab */}
               {activeTab === 'request' && (
                 <div className="tab-pane active">
                   <h5 className="mb-4">Request a Payout</h5>
-                  
+
                   <form onSubmit={submitPayoutRequest} className="row">
                     <div className="col-md-6 mb-3">
                       <label htmlFor="amount" className="form-label">Amount</label>
@@ -273,7 +298,7 @@ function PayoutRequest() {
                       </div>
                       <div className="form-text">Minimum payout amount is ₹10</div>
                     </div>
-                    
+
                     <div className="col-md-6 mb-3">
                       <label htmlFor="paymentMethod" className="form-label">Payment Method</label>
                       <select
@@ -289,10 +314,10 @@ function PayoutRequest() {
                         <option value="check">Check</option>
                       </select>
                     </div>
-                    
+
                     <div className="col-12">
-                      <button 
-                        type="submit" 
+                      <button
+                        type="submit"
                         className="btn btn-primary"
                         disabled={loading}
                       >
@@ -310,7 +335,7 @@ function PayoutRequest() {
                       </button>
                     </div>
                   </form>
-                  
+
                   <div className="alert alert-info mt-4 mb-0">
                     <div className="d-flex">
                       <i className="bx bx-info-circle fs-5 me-2"></i>
@@ -321,13 +346,13 @@ function PayoutRequest() {
                   </div>
                 </div>
               )}
-              
+
               {/* Payout History Tab */}
               {activeTab === 'history' && (
                 <div className="tab-pane active">
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <h5 className="mb-0">Payout History</h5>
-                    
+
                     <div className="form-group mb-0" style={{ width: '200px' }}>
                       <select
                         className="form-select"
@@ -343,7 +368,7 @@ function PayoutRequest() {
                       </select>
                     </div>
                   </div>
-                  
+
                   {loading ? (
                     <div className="d-flex justify-content-center align-items-center py-5">
                       <div className="spinner-border text-primary" role="status">
@@ -356,8 +381,8 @@ function PayoutRequest() {
                         <i className="bx bx-receipt fs-1 text-muted"></i>
                       </div>
                       <h6 className="text-muted">
-                        {payouts.length === 0 
-                          ? 'No payout records found.' 
+                        {payouts.length === 0
+                          ? 'No payout records found.'
                           : 'No payouts match the selected filter.'}
                       </h6>
                     </div>
@@ -417,7 +442,7 @@ function PayoutRequest() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default PayoutRequest
+export default PayoutRequest;

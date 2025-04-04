@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import 'boxicons/css/boxicons.min.css';
+import "boxicons/css/boxicons.min.css";
 
 export const PaymentCard = () => {
   const [walletBalance, setWalletBalance] = useState(0);
@@ -12,8 +12,10 @@ export const PaymentCard = () => {
       try {
         setLoading(true);
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5000/api/auth/profile", {
-          headers: { Authorization: `Bearer ${token}` }
+        // Use the VITE_API_URL environment variable
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const response = await axios.get(`${apiUrl}/auth/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         // Extract wallet balance from profile response
@@ -57,19 +59,19 @@ export const PaymentCard = () => {
   }
 
   // Format wallet balance to 2 decimal places if it has decimals
-  const formattedBalance = Number.isInteger(walletBalance) 
-    ? walletBalance.toLocaleString() 
-    : walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const formattedBalance = Number.isInteger(walletBalance)
+    ? walletBalance.toLocaleString()
+    : walletBalance.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
 
   return (
     <div className="col-6 mb-4">
       <div className="card">
         <div className="card-body">
           <div className="card-title d-flex align-items-start justify-content-between mb-3">
-            {/* <div className="avatar flex-shrink-0 p-3 rounded bg-primary bg-opacity-10"> */}
-              {/* <i className="bx bx-wallet text-primary fs-3"></i> */}
-              <i className="bx bx-wallet text-primary fs-3"></i>
-
+            <i className="bx bx-wallet text-primary fs-3"></i>
             <div className="dropdown">
               <button
                 aria-label="Click me"
@@ -100,8 +102,9 @@ export const PaymentCard = () => {
             ₹{formattedBalance}
           </h3>
           <div className="d-flex align-items-center">
-            <span className="badge bg-label-success rounded-pill">Available</span>
-
+            <span className="badge bg-label-success rounded-pill">
+              Available
+            </span>
           </div>
         </div>
       </div>

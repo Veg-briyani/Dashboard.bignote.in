@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl, getAuthHeaders } from '../services/apiConfig';
 
 const AuthorBookPurchase = () => {
   // State management
@@ -36,7 +37,7 @@ const AuthorBookPurchase = () => {
         await fetchBalance();
         
         // Fetch books
-        const booksResponse = await fetch("http://localhost:5000/api/books", {
+        const booksResponse = await fetch(getApiUrl("books"), {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -47,7 +48,7 @@ const AuthorBookPurchase = () => {
         setBooks(Array.isArray(booksData) ? booksData : booksData?.books || []);
         
         // Fetch profit data using axios
-        const profitResponse = await axios.get("http://localhost:5000/api/books/dashboard", {
+        const profitResponse = await axios.get(getApiUrl("books/dashboard"), {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -88,7 +89,7 @@ const AuthorBookPurchase = () => {
 
       setProcessing(true);
 
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/orders`, {
+      const response = await axios.post(getApiUrl("orders"), {
         bookId: selectedBook._id,
         quantity,
         paymentMethod
@@ -109,7 +110,7 @@ const AuthorBookPurchase = () => {
             try {
               // Send payment verification to backend
               const verifyPayment = await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/orders/verify-payment`,
+                getApiUrl("orders/verify-payment"),
                 {
                   razorpayOrderId: razorpayResponse.razorpay_order_id,
                   razorpayPaymentId: razorpayResponse.razorpay_payment_id,
@@ -197,7 +198,7 @@ const AuthorBookPurchase = () => {
       const token = localStorage.getItem("token");
       if (!token) return;
       
-      const response = await axios.get("http://localhost:5000/api/books/dashboard", {
+      const response = await axios.get(getApiUrl("books/dashboard"), {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -212,7 +213,7 @@ const AuthorBookPurchase = () => {
   const fetchBalance = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/auth/profile`, {
+      const response = await axios.get(getApiUrl("auth/profile"), {
         headers: { Authorization: `Bearer ${token}` }
       });
       

@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useState, useEffect, useMemo } from "react";
 import EditProfileModal from "../components/EditProfileModal";
+import { getApiUrl, getFetchOptions } from "../services/apiConfig";
 
 const authorDataPropTypes = {
   id: PropTypes.string.isRequired,
@@ -62,7 +63,7 @@ export const AuthorDetails = () => {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("No authentication token found");
 
-        const response = await fetch("http://localhost:5000/api/auth/profile", {
+        const response = await fetch(getApiUrl("auth/profile"), {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -110,7 +111,7 @@ export const AuthorDetails = () => {
     const fetchBooks = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:5000/api/books", {
+        const response = await fetch(getApiUrl("books"), {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error("Failed to fetch books");

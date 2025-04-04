@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { authAPI } from '../services/api';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext'; // Make sure to import useAuth
+import { getApiUrl } from '../services/apiConfig';
 
 const LoginPage = () => {
   const { login } = useAuth();
 
   const handleLogin = async (formData) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", formData);
+      const response = await axios.post(getApiUrl('auth/login'), formData);
       const { token, user } = response.data;
       
       localStorage.setItem("token", token);
