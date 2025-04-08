@@ -1,4 +1,3 @@
-// AppRoutes.js
 import { Routes, Route, Navigate } from "react-router-dom";
 import DashboardPage from "../pages/DashboardPage";
 import { AuthorBooks } from "../pages/AuthorBooks";
@@ -8,8 +7,8 @@ import AuthRoutes from "./AuthRoutes";
 import { useAuth } from "../contexts/AuthContext";
 import PayoutRequest from "../components/PayoutRequest";
 import AuthorBookPurchase from "../pages/AuthorBookPurchase";
-import Layout from "../layouts/Layout";
 import ResetPassword from "../pages/ResetPassword";
+import NotFoundPage from "../pages/misc/ErrorPage";  // Import the ErrorPage component for 404
 
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
@@ -17,6 +16,8 @@ const PrivateRoute = ({ children }) => {
 };
 
 const AppRoutes = () => {
+  const { user } = useAuth();
+
   const routes = [
     { path: "/auth/*", element: <AuthRoutes />, isPrivate: false },
     { path: "/dashboard", element: <DashboardPage />, isPrivate: true },
@@ -29,13 +30,17 @@ const AppRoutes = () => {
       element: <AuthorBookPurchase />,
       isPrivate: true,
     },
-    // Direct route for reset password links from email
-    { 
-      path: "/reset-password", 
-      element: <ResetPassword />, 
-      isPrivate: false 
+    {
+      path: "/reset-password",
+      element: <ResetPassword />,
+      isPrivate: false
     },
-    { path: "/", element: <Navigate to="/auth/login" />, isPrivate: false },
+    {
+      path: "/",
+      element: user ? <Navigate to="/dashboard" /> : <Navigate to="/auth/login" />,
+      isPrivate: false
+    },
+    { path: "*", element: <NotFoundPage />, isPrivate: false },
   ];
 
   return (
