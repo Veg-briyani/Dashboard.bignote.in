@@ -91,7 +91,7 @@ const Navbar = () => {
             <a
               aria-label="User profile"
               className="nav-link dropdown-toggle hide-arrow"
-              href="#"
+              href="/Details"
               onClick={(e) => {
                 e.preventDefault();
                 setIsDropdownOpen(!isDropdownOpen);
@@ -182,7 +182,7 @@ const Navbar = () => {
               <li>
                 <Link
                   className="dropdown-item"
-                  to="/PayoutRequest"
+                  to="/payout-request"
                   onClick={() => setIsDropdownOpen(false)}
                 >
                   <i className="bx bx-money me-2"></i>

@@ -34,8 +34,8 @@ export const PaymentCard = () => {
 
   if (loading) {
     return (
-      <div className="col-6 mb-4">
-        <div className="card">
+      <div className="col-lg-6 col-md-12 col-6 mb-4">
+        <div className="card h-100">
           <div className="card-body d-flex justify-content-center align-items-center">
             <div className="spinner-border text-primary" role="status">
               <span className="visually-hidden">Loading...</span>
@@ -48,8 +48,8 @@ export const PaymentCard = () => {
 
   if (error) {
     return (
-      <div className="col-6 mb-4">
-        <div className="card">
+      <div className="col-lg-6 col-md-12 col-6 mb-4">
+        <div className="card h-100">
           <div className="card-body">
             <div className="alert alert-danger mb-0">{error}</div>
           </div>
@@ -67,11 +67,17 @@ export const PaymentCard = () => {
       });
 
   return (
-    <div className="col-6 mb-4">
-      <div className="card">
+    <div className="col-lg-6 col-md-12 col-6 mb-4">
+      <div className="card h-100">
         <div className="card-body">
           <div className="card-title d-flex align-items-start justify-content-between mb-3">
-            <i className="bx bx-wallet text-primary fs-3"></i>
+            <img
+              aria-label="dashboard icon image"
+              src="/assets/img/icons/unicons/wallet-info.png"
+              alt="chart success"
+              className="rounded"
+              style={{ width: '39px', height: '40px' }} // Set desired width and height
+            />
             <div className="dropdown">
               <button
                 aria-label="Click me"
@@ -82,19 +88,9 @@ export const PaymentCard = () => {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                <i className="bx bx-dots-vertical-rounded"></i>
+
               </button>
-              <div
-                className="dropdown-menu dropdown-menu-end"
-                aria-labelledby="cardOpt4"
-              >
-                <a aria-label="view more" className="dropdown-item" href="#">
-                  View More
-                </a>
-                <a aria-label="withdraw" className="dropdown-item" href="#">
-                  Withdraw
-                </a>
-              </div>
+               
             </div>
           </div>
           <span className="d-block text-muted mb-1">Wallet Balance</span>

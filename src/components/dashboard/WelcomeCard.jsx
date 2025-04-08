@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { dashboardAPI } from "../../services/dashboardAPI";
+import { useNavigate } from "react-router-dom"; // Assuming you're using React Router
 
 export const WelcomeCard = () => {
   const [userData, setUserData] = useState({
@@ -7,6 +8,8 @@ export const WelcomeCard = () => {
     totalInventory: 0,
     authorName: "Author", // Default value
   });
+
+  const navigate = useNavigate(); // Hook to programmatically navigate
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -33,11 +36,31 @@ export const WelcomeCard = () => {
           totalInventory: 0,
           authorName: "Author",
         });
+        // Optionally, redirect to login if unauthorized
+        if (error.response && error.response.status === 401) {
+          navigate("/login");
+        }
       }
     };
 
     fetchUserData();
-  }, []);
+  }, [navigate]);
+
+  const handleViewProfile = () => {
+    // Check if the user is authenticated before navigating
+    // This is a placeholder check; replace it with your actual authentication check
+    if (isAuthenticated()) {
+      navigate("/Details");
+    } else {
+      navigate("/Details");
+    }
+  };
+
+  const isAuthenticated = () => {
+    // Implement your authentication check logic here
+    // For example, check if a token exists in local storage
+    return !!localStorage.getItem("authToken");
+  };
 
   return (
     <div className="col-lg-8 mb-4 order-0">
@@ -53,9 +76,9 @@ export const WelcomeCard = () => {
                 your performance and engage with your
                 audience all in one place.
               </p>
-              <a href="#" className="btn btn-sm btn-outline-primary">
+              <button onClick={handleViewProfile} className="btn btn-sm btn-outline-primary">
                 View Profile
-              </a>
+              </button>
             </div>
           </div>
           <div className="col-sm-5 text-center text-sm-left">

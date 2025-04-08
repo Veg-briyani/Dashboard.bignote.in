@@ -21,7 +21,7 @@ const Sidebar = () => {
       <div className="app-brand demo">
         <Link
           aria-label="Navigate to  homepage"
-          to="/"
+          to="/dashboard"
           className="app-brand-link"
         >
           <span className="app-brand-logo demo">

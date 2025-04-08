@@ -15,7 +15,7 @@
         "link": "/books"
       },
       {
-        "text": "Authors",
+        "text": "Author's Profile",
         "icon": "bx bx-user",
         "available": true,
         "link": "/Details"

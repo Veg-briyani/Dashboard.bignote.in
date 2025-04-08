@@ -120,7 +120,13 @@ export const TransactionStatsCard = () => {
       <div className="card">
         <div className="card-body">
           <div className="card-title d-flex align-items-start justify-content-between">
-            <i className="bx bx-check-circle text-success fs-3"></i>
+            <img
+              aria-label="dashboard icon image"
+              src="/assets/img/icons/unicons/paypal.png"
+              alt="chart success"
+              className="rounded"
+              style={{ width: '39px', height: '40px' }} // Set desired width and height
+            />
             <div className="dropdown">
               <button
                 aria-label="Click me"
@@ -131,13 +137,9 @@ export const TransactionStatsCard = () => {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                <i className="bx bx-dots-vertical-rounded"></i>
+
               </button>
-              <div className="dropdown-menu" aria-labelledby="cardOpt2">
-                <a aria-label="view more" className="dropdown-item" href="#">
-                  View Payout History
-                </a>
-              </div>
+              
             </div>
           </div>
           <span className="fw-medium d-block mb-1">Total royalty received</span>

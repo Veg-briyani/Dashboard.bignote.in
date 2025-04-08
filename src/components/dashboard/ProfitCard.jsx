@@ -1,4 +1,3 @@
-// Total Royalty Earned
 import { useState, useEffect } from "react";
 import axios from "axios";
 import 'boxicons/css/boxicons.min.css';
@@ -39,7 +38,7 @@ export const ProfitCard = () => {
 
   return (
     <div className="col-lg-6 col-md-12 col-6 mb-4">
-      <div className="card">
+      <div className="card h-100">
         <div className="card-body">
           <div className="card-title d-flex align-items-start justify-content-between">
             <div className="avatar flex-shrink-0">
@@ -50,7 +49,6 @@ export const ProfitCard = () => {
                 className="rounded"
               />
             </div>
-             
           </div>
           <span className="fw-medium d-block mb-1">Total Royalty Earned</span>
           <h3 className="card-title mb-2">₹{profitData.totalRoyalty.toLocaleString()}</h3>
@@ -62,3 +60,5 @@ export const ProfitCard = () => {
     </div>
   );
 };
+// export default ProfitCard;
+// The ProfitCard component fetches and displays the total royalty earned and its growth percentage.

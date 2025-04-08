@@ -29,7 +29,7 @@ export const SalesCard = () => {
 
   return (
     <div className="col-lg-6 col-md-12 col-6 mb-4">
-      <div className="card">
+      <div className="card h-100">
         <div className="card-body">
           <div className="card-title d-flex align-items-start justify-content-between">
             <div className="avatar flex-shrink-0">
@@ -38,9 +38,9 @@ export const SalesCard = () => {
                 src="/assets/img/icons/unicons/wallet-info.png"
                 alt="Credit Card"
                 className="rounded"
+
               />
             </div>
-            <div className="dropdown">{/* ... dropdown content ... */}</div>
           </div>
           <span>Copies Sold</span>
           <h3 className="card-title text-nowrap mb-1">
