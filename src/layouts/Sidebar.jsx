@@ -1,15 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import menuData from "../data/menuData.json";
-import { useNavigate } from "react-router-dom";
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const { darkMode } = useTheme();
-
-  const handleLogout = () => {
-    navigate("/login");
+  
+  // Directly access the auth context
+  const authContext = useAuth();
+  
+  // Handle logout with direct reference to the context
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      // Check if logout function exists before calling it
+      if (typeof authContext.logout === 'function') {
+        await authContext.logout();
+      } else {
+        // Fallback to a basic redirect if logout function isn't available
+        navigate('/login');
+      }
+    } catch (error) {
+       
+      // Attempt a basic redirect on error
+      navigate('/login');
+    }
   };
 
   return (
@@ -136,4 +153,3 @@ const MenuItem = (item) => {
 };
 
 export default Sidebar;
- 
