@@ -391,11 +391,11 @@ function PayoutRequest() {
                       <table className="table table-hover border-top">
                         <thead>
                           <tr>
-                            <th>Date</th>
+                            <th  style={{ textAlign: 'center' }}>Date</th>
                             <th>Amount</th>
                             <th>Payment Method</th>
                             <th>Status</th>
-                            <th>Transaction ID</th>
+                            <th style={{ textAlign: 'center' }}>Updated</th>
                           </tr>
                         </thead>
                         <tbody className="table-border-bottom-0">

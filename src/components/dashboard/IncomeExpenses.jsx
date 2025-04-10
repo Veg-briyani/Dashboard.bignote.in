@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { dashboardAPI } from "../../services/dashboardAPI";
+import "./IncomeExpenses.css"; // Import the custom CSS file
 
 export const IncomeExpenses = () => {
   const [incomeData, setIncomeData] = useState({
@@ -89,7 +90,7 @@ export const IncomeExpenses = () => {
                   </small>
                   <div className="d-flex align-items-center justify-content-between">
                     <h4 className="mb-0 me-1">{incomeData.amount}</h4>
-                    <span className="badge bg-label-success rounded-pill">
+                    <span className="badge bg-label-success rounded-pill responsive-badge">
                       <i className="bx bx-chevron-up me-1"></i>
                       {incomeData.change}
                     </span>

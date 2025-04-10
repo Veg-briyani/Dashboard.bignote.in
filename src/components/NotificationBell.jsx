@@ -78,17 +78,17 @@ const NotificationBell = () => {
   const unreadNotifications = notifications.filter(n => !n.read);
   const unreadCount = unreadNotifications.length;
 
-  // Get icon based on notification type
+  // UPDATED: Get icon based on notification type
   const getNotificationIcon = (type) => {
     switch (type) {
       case 'payment':
-        return 'bx-credit-card';
+        return 'bx-wallet'; // Changed from bx-credit-card to bx-wallet
       case 'royalty':
-        return 'bx-dollar-circle';
+        return 'bx-money'; // Changed from bx-dollar-circle to bx-money
       case 'book':
-        return 'bx-book';
+        return 'bx-library'; // Changed from bx-book to bx-library
       case 'system':
-        return 'bx-info-circle';
+        return 'bx-cog'; // Changed from bx-info-circle to bx-cog
       default:
         return 'bx-bell';
     }
