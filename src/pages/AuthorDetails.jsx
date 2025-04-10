@@ -72,20 +72,30 @@ export const AuthorDetails = () => {
         if (!response.ok) throw new Error("Failed to fetch author data");
 
         const data = await response.json();
+        
+        // Check if both Aadhaar and PAN numbers exist and are non-empty
+        const hasAadhaar = !!data.aadhaarNumber && data.aadhaarNumber.trim() !== '';
+        const hasPAN = !!data.panNumber && data.panNumber.trim() !== '';
+        
+        // Determine KYC status based on presence of both documents
+        const calculatedKycStatus = (hasAadhaar && hasPAN) ? "approved" : "pending";
+        
         setAuthorData({
           ...data,
+          // Override the kycStatus from API with our calculated status
+          kycStatus: calculatedKycStatus,
           // Add these formatted properties
           kycDetails: {
-            kycStatus: data.kycStatus || "pending",
+            kycStatus: calculatedKycStatus, // Use our calculated status here as well
             authMethod: data.authMethod || "email",
-            documentType: data.aadhaarVerified
+            documentType: hasAadhaar
               ? "Aadhaar Card"
-              : data.panVerified
+              : hasPAN
               ? "PAN Card"
               : "Not Verified",
-            documentNumber: data.aadhaarVerified
+            documentNumber: hasAadhaar
               ? data.aadhaarNumber
-              : data.panVerified
+              : hasPAN
               ? data.panNumber
               : "Not Available",
           },
@@ -389,8 +399,8 @@ export const AuthorDetails = () => {
               <p className="text-muted mb-3">
                 <i className="bx bx-map-pin me-1"></i>
                 {authorData.address?.city || "Location not specified"} • 
-
-
+                <i className="bx bx-calendar ms-2 me-1"></i>
+                Joined {authorData.profile.memberSince || "2023"}
               </p>
               
               <div className="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start mb-3">
@@ -646,8 +656,13 @@ export const AuthorDetails = () => {
             <h5 className="card-title text-primary mb-0">
               <i className="bx bx-check-shield me-2"></i>KYC Verification
             </h5>
-            <div className="badge bg-success rounded-pill px-3 py-2">
-              <i className="bx bx-check me-1"></i>APPROVED
+            <div className={`badge ${
+              authorData.kycStatus === "approved" ? "bg-success" : "bg-warning"
+            } rounded-pill px-3 py-2`}>
+              <i className={`bx ${
+                authorData.kycStatus === "approved" ? "bx-check" : "bx-time-five"
+              } me-1`}></i>
+              {authorData.kycStatus === "approved" ? "APPROVED" : "PENDING"}
             </div>
           </div>
           <div className="card-body p-4">
@@ -655,8 +670,12 @@ export const AuthorDetails = () => {
             <div className="card bg-light border-0 rounded-4 mb-4">
               <div className="card-body p-4">
                 <div className="d-flex flex-column flex-md-row align-items-md-center mb-3">
-                  <div className="rounded-circle p-2 bg-success me-md-3 mb-3 mb-md-0 align-self-center align-self-md-start">
-                    <i className="bx bx-check text-white fs-4"></i>
+                  <div className={`rounded-circle p-2 ${
+                    authorData.kycStatus === "approved" ? "bg-success" : "bg-warning"
+                  } me-md-3 mb-3 mb-md-0 align-self-center align-self-md-start`}>
+                    <i className={`bx ${
+                      authorData.kycStatus === "approved" ? "bx-check" : "bx-time-five"
+                    } text-white fs-4`}></i>
                   </div>
                   <div>
                     <h5 className="mb-1">KYC Verification Status</h5>
@@ -665,16 +684,21 @@ export const AuthorDetails = () => {
                     </p>
                     <div className="progress mb-3" style={{ height: "8px" }}>
                       <div
-                        className="progress-bar bg-success"
+                        className={`progress-bar ${
+                          authorData.kycStatus === "approved" ? "bg-success" : "bg-warning"
+                        }`}
                         role="progressbar"
-                        style={{ width: "100%" }}
-                        aria-valuenow="100"
+                        style={{ width: authorData.kycStatus === "approved" ? "100%" : "50%" }}
+                        aria-valuenow={authorData.kycStatus === "approved" ? "100" : "50"}
                         aria-valuemin="0"
                         aria-valuemax="100"
                       ></div>
                     </div>
-                    <p className="mb-0">
-                      Your KYC verification is complete. You have full access to all platform features.
+
+                        <p className="mb-0">
+                      {authorData.kycStatus === "approved" 
+                        ? "Your KYC verification is complete. You have full access to all platform features."
+                        : "Your KYC verification is incomplete. Please provide both Aadhaar and PAN card details to complete verification."}
                     </p>
                   </div>
                 </div>
@@ -693,19 +717,29 @@ export const AuthorDetails = () => {
                       </div>
                       <div>
                         <h5 className="mb-1">Aadhaar Card</h5>
-                        {authorData.aadhaarNumber && (
+                        {authorData.aadhaarNumber ? (
                           <p className="text-muted mb-0 small">
                             Number: {authorData.aadhaarNumber.replace(/\d(?=\d{4})/g, "*")}
+                          </p>
+                        ) : (
+                          <p className="text-muted mb-0 small">
+                            Not Available
                           </p>
                         )}
                       </div>
                     </div>
-                    <div className="alert alert-success mb-0 d-flex align-items-center rounded-3">
-                      <i className="bx bx-check-circle me-2 fs-5"></i>
+                    <div className={`alert ${
+                      authorData.aadhaarNumber ? "alert-success" : "alert-warning"
+                    } mb-0 d-flex align-items-center rounded-3`}>
+                      <i className={`bx ${
+                        authorData.aadhaarNumber ? "bx-check-circle" : "bx-error-circle"
+                      } me-2 fs-5`}></i>
                       <div>
-                        <strong>VERIFIED</strong>
+                        <strong>{authorData.aadhaarNumber ? "VERIFIED" : "MISSING"}</strong>
                         <p className="mb-0 small">
-                          Your Aadhaar has been verified successfully.
+                          {authorData.aadhaarNumber 
+                            ? "Your Aadhaar has been verified successfully."
+                            : "Please add your Aadhaar card number."}
                         </p>
                       </div>
                     </div>
@@ -723,19 +757,29 @@ export const AuthorDetails = () => {
                       </div>
                       <div>
                         <h5 className="mb-1">PAN Card</h5>
-                        {authorData.panNumber && (
+                        {authorData.panNumber ? (
                           <p className="text-muted mb-0 small">
                             Number: {authorData.panNumber.substring(0, 2)}******{authorData.panNumber.substring(8)}
+                          </p>
+                        ) : (
+                          <p className="text-muted mb-0 small">
+                            Not Available
                           </p>
                         )}
                       </div>
                     </div>
-                    <div className="alert alert-success mb-0 d-flex align-items-center rounded-3">
-                      <i className="bx bx-check-circle me-2 fs-5"></i>
+                    <div className={`alert ${
+                      authorData.panNumber ? "alert-success" : "alert-warning"
+                    } mb-0 d-flex align-items-center rounded-3`}>
+                      <i className={`bx ${
+                        authorData.panNumber ? "bx-check-circle" : "bx-error-circle"
+                      } me-2 fs-5`}></i>
                       <div>
-                        <strong>VERIFIED</strong>
+                        <strong>{authorData.panNumber ? "VERIFIED" : "MISSING"}</strong>
                         <p className="mb-0 small">
-                          Your PAN has been verified successfully.
+                          {authorData.panNumber 
+                            ? "Your PAN has been verified successfully."
+                            : "Please add your PAN card number."}
                         </p>
                       </div>
                     </div>
