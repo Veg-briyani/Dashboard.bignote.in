@@ -14,6 +14,7 @@ import { AuthorDetails } from "./pages/AuthorDetails";
 import { TablesPage } from "./pages/TablesPage";
 import PayoutRequest from "./components/PayoutRequest";
 import AuthorBookPurchase from "./pages/AuthorBookPurchase";
+import CalendlyWidget from './components/CalendlyWidget';
 
 // Private route wrapper component
 const PrivateRoute = ({ children }) => {
@@ -91,13 +92,15 @@ const AppRoutes = () => {
       } />
     </Routes>
   );
-};
+}
 
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
+        <CalendlyWidget />
+
           <AppRoutes />
         </BrowserRouter>
       </AuthProvider>

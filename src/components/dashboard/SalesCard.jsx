@@ -42,7 +42,7 @@ export const SalesCard = () => {
               />
             </div>
           </div>
-          <span>Copies Sold</span>
+          <span>Total Copies Sold</span>
           <h3 className="card-title text-nowrap mb-1">
             {salesData.totalSales.toLocaleString()} copies
           </h3>
