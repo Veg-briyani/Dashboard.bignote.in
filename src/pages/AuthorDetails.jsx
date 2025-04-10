@@ -80,6 +80,14 @@ export const AuthorDetails = () => {
         // Determine KYC status based on presence of both documents
         const calculatedKycStatus = (hasAadhaar && hasPAN) ? "approved" : "pending";
         
+        // Check if bank account details are complete
+        const hasBankName = !!data.bankAccount?.bankName && data.bankAccount.bankName.trim() !== '';
+        const hasAccountNumber = !!data.bankAccount?.accountNumber && data.bankAccount.accountNumber.trim() !== '';
+        const hasIfscCode = !!data.bankAccount?.ifscCode && data.bankAccount.ifscCode.trim() !== '';
+        
+        // Bank account is verified if all required fields are present
+        const isBankVerified = hasBankName && hasAccountNumber && hasIfscCode;
+        
         setAuthorData({
           ...data,
           // Override the kycStatus from API with our calculated status
@@ -104,7 +112,7 @@ export const AuthorDetails = () => {
             accountNumber: data.bankAccount?.accountNumber || "Not Available",
             accountType: "Savings",
             ifscCode: data.bankAccount?.ifscCode || "Not Available",
-            verified: data.bankAccount?.verified || false,
+            verified: isBankVerified, // Use our calculated verification status
           },
         });
       } catch (err) {
@@ -666,44 +674,43 @@ export const AuthorDetails = () => {
             </div>
           </div>
           <div className="card-body p-4">
-            {/* Status Card */}
-            <div className="card bg-light border-0 rounded-4 mb-4">
-              <div className="card-body p-4">
-                <div className="d-flex flex-column flex-md-row align-items-md-center mb-3">
-                  <div className={`rounded-circle p-2 ${
-                    authorData.kycStatus === "approved" ? "bg-success" : "bg-warning"
-                  } me-md-3 mb-3 mb-md-0 align-self-center align-self-md-start`}>
-                    <i className={`bx ${
-                      authorData.kycStatus === "approved" ? "bx-check" : "bx-time-five"
-                    } text-white fs-4`}></i>
-                  </div>
-                  <div>
-                    <h5 className="mb-1">KYC Verification Status</h5>
-                    <p className="text-muted mb-3 mb-md-2">
-                      Last updated: {new Date().toLocaleDateString()}
-                    </p>
-                    <div className="progress mb-3" style={{ height: "8px" }}>
-                      <div
-                        className={`progress-bar ${
-                          authorData.kycStatus === "approved" ? "bg-success" : "bg-warning"
-                        }`}
-                        role="progressbar"
-                        style={{ width: authorData.kycStatus === "approved" ? "100%" : "50%" }}
-                        aria-valuenow={authorData.kycStatus === "approved" ? "100" : "50"}
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
-                    </div>
-
-                        <p className="mb-0">
-                      {authorData.kycStatus === "approved" 
-                        ? "Your KYC verification is complete. You have full access to all platform features."
-                        : "Your KYC verification is incomplete. Please provide both Aadhaar and PAN card details to complete verification."}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+  {/* Status Card */}
+  <div className="card bg-light border-0 rounded-4 mb-4">
+    <div className="card-body p-4">
+      <div className="d-flex flex-column flex-md-row align-items-md-center mb-3">
+        <div className={`rounded-circle p-2 ${
+          authorData.kycStatus === "approved" ? "bg-success" : "bg-warning"
+        } me-md-3 mb-3 mb-md-0 align-self-center align-self-md-start`}>
+          <i className={`bx ${
+            authorData.kycStatus === "approved" ? "bx-check" : "bx-time-five"
+          } text-white fs-4`}></i>
+        </div>
+        <div>
+          <h5 className="mb-1">KYC Verification Status</h5>
+          <p className="text-muted mb-3 mb-md-2">
+            Last updated: {new Date().toLocaleDateString()}
+          </p>
+          <div className="progress mb-3" style={{ height: "8px" }}>
+            <div
+              className={`progress-bar ${
+                authorData.kycStatus === "approved" ? "bg-success" : "bg-warning"
+              }`}
+              role="progressbar"
+              style={{ width: authorData.kycStatus === "approved" ? "100%" : "50%" }}
+              aria-valuenow={authorData.kycStatus === "approved" ? "100" : "50"}
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+          <p className="mb-0">
+            {authorData.kycStatus === "approved" 
+              ? "Your KYC verification is complete. You have full access to all platform features."
+              : "Your KYC verification is incomplete. Please provide both Aadhaar and PAN card details to complete verification."}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
             {/* Document Cards */}
             <div className="row g-4">
@@ -798,8 +805,13 @@ export const AuthorDetails = () => {
             <h5 className="card-title text-primary mb-0">
               <i className="bx bx-bank me-2"></i>Bank Account
             </h5>
-            <div className="badge bg-success rounded-pill px-3 py-2">
-              <i className="bx bx-check-circle me-1"></i>Verified
+            <div className={`badge ${
+              authorData.bankAccount?.verified ? "bg-success" : "bg-warning"
+            } rounded-pill px-3 py-2`}>
+              <i className={`bx ${
+                authorData.bankAccount?.verified ? "bx-check-circle" : "bx-time-five"
+              } me-1`}></i>
+              {authorData.bankAccount?.verified ? "Verified" : "Incomplete"}
             </div>
           </div>
           <div className="card-body p-4">
@@ -807,8 +819,12 @@ export const AuthorDetails = () => {
             <div className="card bg-light border-0 rounded-4 mb-4">
               <div className="card-body p-4">
                 <div className="d-flex flex-column flex-md-row align-items-md-center mb-3">
-                  <div className="rounded-circle p-2 bg-success me-md-3 mb-3 mb-md-0 align-self-center align-self-md-start">
-                    <i className="bx bx-check text-white fs-4"></i>
+                  <div className={`rounded-circle p-2 ${
+                    authorData.bankAccount?.verified ? "bg-success" : "bg-warning"
+                  } me-md-3 mb-3 mb-md-0 align-self-center align-self-md-start`}>
+                    <i className={`bx ${
+                      authorData.bankAccount?.verified ? "bx-check" : "bx-time-five"
+                    } text-white fs-4`}></i>
                   </div>
                   <div>
                     <h5 className="mb-1">Bank Account Verification</h5>
@@ -817,16 +833,20 @@ export const AuthorDetails = () => {
                     </p>
                     <div className="progress mb-3" style={{ height: "8px" }}>
                       <div
-                        className="progress-bar bg-success"
+                        className={`progress-bar ${
+                          authorData.bankAccount?.verified ? "bg-success" : "bg-warning"
+                        }`}
                         role="progressbar"
-                        style={{ width: "100%" }}
-                        aria-valuenow="100"
+                        style={{ width: authorData.bankAccount?.verified ? "100%" : "60%" }}
+                        aria-valuenow={authorData.bankAccount?.verified ? "100" : "60"}
                         aria-valuemin="0"
                         aria-valuemax="100"
                       ></div>
                     </div>
                     <p className="mb-0">
-                      Your bank account has been verified successfully. You can receive payments and royalties.
+                      {authorData.bankAccount?.verified 
+                        ? "Your bank account has been verified successfully. You can receive payments and royalties."
+                        : "Your bank account verification is incomplete. Please provide all required bank details."}
                     </p>
                   </div>
                 </div>
@@ -843,12 +863,29 @@ export const AuthorDetails = () => {
                         <i className="bx bx-bank text-primary me-2"></i>
                         <span>Bank Name</span>
                       </label>
-                      <input
-                        type="text"
-                        className="form-control form-control-lg rounded-3"
-                        value={authorData.bankAccount?.bankName || "Not Available"}
-                        readOnly
-                      />
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className={`form-control form-control-lg rounded-start-3 ${
+                            !authorData.bankAccount?.bankName || authorData.bankAccount.bankName === "Not Available"
+                              ? "border-warning"
+                              : ""
+                          }`}
+                          value={authorData.bankAccount?.bankName || "Not Available"}
+                          readOnly
+                        />
+                        <span className={`input-group-text ${
+                          !authorData.bankAccount?.bankName || authorData.bankAccount.bankName === "Not Available"
+                            ? "bg-warning text-white"
+                            : "bg-success text-white"
+                        }`}>
+                          <i className={`bx ${
+                            !authorData.bankAccount?.bankName || authorData.bankAccount.bankName === "Not Available"
+                              ? "bx-error"
+                              : "bx-check"
+                          }`}></i>
+                        </span>
+                      </div>
                     </div>
                   </div>
                   <div className="col-md-6">
@@ -857,16 +894,33 @@ export const AuthorDetails = () => {
                         <i className="bx bx-credit-card text-primary me-2"></i>
                         <span>Account Number</span>
                       </label>
-                      <input
-                        type="text"
-                        className="form-control form-control-lg rounded-3"
-                        value={
-                          authorData.bankAccount?.accountNumber
-                            ? authorData.bankAccount.accountNumber.replace(/.(?=.{4})/g, "*")
-                            : "Not Available"
-                        }
-                        readOnly
-                      />
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className={`form-control form-control-lg rounded-start-3 ${
+                            !authorData.bankAccount?.accountNumber || authorData.bankAccount.accountNumber === "Not Available"
+                              ? "border-warning"
+                              : ""
+                          }`}
+                          value={
+                            authorData.bankAccount?.accountNumber && authorData.bankAccount.accountNumber !== "Not Available"
+                              ? authorData.bankAccount.accountNumber.replace(/.(?=.{4})/g, "*")
+                              : "Not Available"
+                          }
+                          readOnly
+                        />
+                        <span className={`input-group-text ${
+                          !authorData.bankAccount?.accountNumber || authorData.bankAccount.accountNumber === "Not Available"
+                            ? "bg-warning text-white"
+                            : "bg-success text-white"
+                        }`}>
+                          <i className={`bx ${
+                            !authorData.bankAccount?.accountNumber || authorData.bankAccount.accountNumber === "Not Available"
+                              ? "bx-error"
+                              : "bx-check"
+                          }`}></i>
+                        </span>
+                      </div>
                     </div>
                   </div>
                   <div className="col-md-6">
@@ -889,28 +943,58 @@ export const AuthorDetails = () => {
                         <i className="bx bx-code-alt text-primary me-2"></i>
                         <span>IFSC Code</span>
                       </label>
-                      <input
-                        type="text"
-                        className="form-control form-control-lg rounded-3"
-                        value={authorData.bankAccount?.ifscCode || "Not Available"}
-                        readOnly
-                      />
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className={`form-control form-control-lg rounded-start-3 ${
+                            !authorData.bankAccount?.ifscCode || authorData.bankAccount.ifscCode === "Not Available"
+                              ? "border-warning"
+                              : ""
+                          }`}
+                          value={authorData.bankAccount?.ifscCode || "Not Available"}
+                          readOnly
+                        />
+                        <span className={`input-group-text ${
+                          !authorData.bankAccount?.ifscCode || authorData.bankAccount.ifscCode === "Not Available"
+                            ? "bg-warning text-white"
+                            : "bg-success text-white"
+                        }`}>
+                          <i className={`bx ${
+                            !authorData.bankAccount?.ifscCode || authorData.bankAccount.ifscCode === "Not Available"
+                              ? "bx-error"
+                              : "bx-check"
+                          }`}></i>
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Security Notice */}
-            <div className="alert alert-success d-flex flex-column flex-md-row align-items-md-center rounded-4">
-              <i className="bx bx-shield-quarter fs-1 me-md-4 mb-3 mb-md-0 align-self-center"></i>
-              <div>
-                <h5 className="alert-heading">Secure Banking</h5>
-                <p className="mb-0">
-                  Your bank details are encrypted and stored securely. Only you can access your complete bank information.
-                </p>
+            {/* Conditionally show Security Notice or Complete Bank Details Notice */}
+            {authorData.bankAccount?.verified ? (
+              <div className="alert alert-success d-flex flex-column flex-md-row align-items-md-center rounded-4">
+                <i className="bx bx-shield-quarter fs-1 me-md-4 mb-3 mb-md-0 align-self-center"></i>
+                <div>
+                  <h5 className="alert-heading">Secure Banking</h5>
+                  <p className="mb-0">
+                    Your bank details are encrypted and stored securely. Only you can access your complete bank information.
+                  </p>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="alert alert-warning d-flex flex-column flex-md-row align-items-md-center rounded-4">
+                <i className="bx bx-info-circle fs-1 me-md-4 mb-3 mb-md-0 align-self-center"></i>
+                <div>
+                  <h5 className="alert-heading">Complete Your Bank Details</h5>
+                  <p className="mb-0">
+                    Please complete your bank account details to receive royalty payments. 
+                    Click the "Edit Profile" button to add your bank information.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
