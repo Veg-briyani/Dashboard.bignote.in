@@ -210,6 +210,7 @@ const AuthorBookPurchase = () => {
       console.error("Error fetching profit data:", err);
     }
   };
+  
   const fetchBalance = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -222,6 +223,7 @@ const AuthorBookPurchase = () => {
       console.error('Error fetching balance:', err);
     }
   }
+  
   // Reset modal state
   const resetModal = () => {
     setShowModal(false);
@@ -281,13 +283,13 @@ const AuthorBookPurchase = () => {
         <div className="col-12">
           <div className="card">
             <div className="card-body">
-              <div className="d-flex justify-content-between align-items-center">
+              <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                 <div>
                   <h4 className="mb-1">Purchase Your Books</h4>
                   <p className="text-muted mb-0">Order copies of your published books for personal distribution</p>
                 </div>
-                <div className="d-flex align-items-center">
-                  <div className="me-4 bg-label-success p-2 rounded">
+                <div className="d-flex flex-wrap align-items-center gap-2">
+                  <div className="me-2 bg-label-success p-2 rounded">
                     <div className="d-flex align-items-center">
                       <i className="bx bx-wallet fs-3 me-2"></i>
                       <div>
@@ -322,7 +324,7 @@ const AuthorBookPurchase = () => {
       {viewMode === 'grid' ? (
         <div className="row g-4">
           {(books || []).map((book) => (
-            <div key={book.id} className="col-xl-3 col-lg-4 col-md-6">
+            <div key={book.id || book._id} className="col-xl-3 col-lg-4 col-sm-6">
               <div className="card h-100">
                 <div className="card-body">
                   <div className="d-flex flex-column align-items-center">
@@ -332,14 +334,14 @@ const AuthorBookPurchase = () => {
                       className="img-fluid rounded shadow-sm mb-3"
                       style={{ height: "180px", objectFit: "cover" }}
                     />
-                    <h5 className="text-center mb-1">{book.title}</h5>
+                    <h5 className="text-center mb-1 text-truncate w-100">{book.title}</h5>
                     <p className="text-muted small mb-2">ISBN: {book.isbn}</p>
-                    <div className="d-flex gap-1 mb-3">
+                    <div className="d-flex flex-wrap gap-1 mb-3 justify-content-center">
                       {book.formats && book.formats.map((format, i) => (
                         <span key={i} className="badge bg-label-secondary">{format}</span>
                       ))}
                     </div>
-                    <p className="fw-semibold text-primary mb-3">₹{book.price.toFixed(2)} per copy</p>
+                    <p className="fw-semibold text-primary mb-3">₹{(book.price || 0).toFixed(2)} per copy</p>
                     <button
                       className="btn btn-primary w-100"
                       onClick={() => openOrderModal(book)}
@@ -351,6 +353,18 @@ const AuthorBookPurchase = () => {
               </div>
             </div>
           ))}
+          
+          {books.length === 0 && (
+            <div className="col-12">
+              <div className="card">
+                <div className="card-body text-center py-5">
+                  <i className="bx bx-book-alt fs-1 text-muted mb-3"></i>
+                  <h5>No Books Available</h5>
+                  <p className="text-muted">You don't have any published books yet.</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="card">
@@ -359,45 +373,56 @@ const AuthorBookPurchase = () => {
               <thead>
                 <tr>
                   <th>Book</th>
-                  <th>ISBN</th>
-                  <th>Formats</th>
+                  <th className="d-none d-md-table-cell">ISBN</th>
+                  <th className="d-none d-md-table-cell">Formats</th>
                   <th>Price</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {(books || []).map((book) => (
-                  <tr key={book.id}>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <img
-                          src={book.coverImage || "/assets/img/book-placeholder.png"}
-                          alt={book.title}
-                          className="rounded me-3"
-                          style={{ height: "48px", width: "36px", objectFit: "cover" }}
-                        />
-                        <span>{book.title}</span>
-                      </div>
-                    </td>
-                    <td>{book.isbn}</td>
-                    <td>
-                      <div className="d-flex gap-1">
-                        {book.formats && book.formats.map((format, i) => (
-                          <span key={i} className="badge bg-label-secondary">{format}</span>
-                        ))}
-                      </div>
-                    </td>
-                    <td>₹{book.price.toFixed(2)}</td>
-                    <td>
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => openOrderModal(book)}
-                      >
-                        <i className="bx bx-cart-add me-1"></i> Order
-                      </button>
+                {(books || []).length > 0 ? (
+                  books.map((book) => (
+                    <tr key={book.id || book._id}>
+                      <td>
+                        <div className="d-flex align-items-center">
+                          <img
+                            src={book.coverImage || "/assets/img/book-placeholder.png"}
+                            alt={book.title}
+                            className="rounded me-3"
+                            style={{ height: "48px", width: "36px", objectFit: "cover" }}
+                          />
+                          <span className="text-truncate" style={{ maxWidth: "150px" }}>{book.title}</span>
+                        </div>
+                      </td>
+                      <td className="d-none d-md-table-cell">{book.isbn}</td>
+                      <td className="d-none d-md-table-cell">
+                        <div className="d-flex flex-wrap gap-1">
+                          {book.formats && book.formats.map((format, i) => (
+                            <span key={i} className="badge bg-label-secondary">{format}</span>
+                          ))}
+                        </div>
+                      </td>
+                      <td>₹{(book.price || 0).toFixed(2)}</td>
+                      <td>
+                        <button
+                          className="btn btn-sm btn-primary"
+                          onClick={() => openOrderModal(book)}
+                        >
+                          <i className="bx bx-cart-add d-block d-sm-none"></i>
+                          <span className="d-none d-sm-inline"><i className="bx bx-cart-add me-1"></i> Order</span>
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center py-4">
+                      <i className="bx bx-book-alt fs-1 text-muted mb-3 d-block"></i>
+                      <h6>No Books Available</h6>
+                      <p className="text-muted">You don't have any published books yet.</p>
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
@@ -407,13 +432,13 @@ const AuthorBookPurchase = () => {
       {/* Order Modal */}
       {showModal && selectedBook && (
         <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
-              <div className="modal-header bg-primary bg-opacity-10 ">
+              <div className="modal-header bg-primary">
                 <h5 className="modal-title text-white">Order Book Copies</h5>
                 <button
                   type="button"
-                  className="btn-close"
+                  className="btn-close btn-close-white"
                   onClick={resetModal}
                   aria-label="Close"
                 ></button>
@@ -445,23 +470,23 @@ const AuthorBookPurchase = () => {
                         className="rounded me-3"
                         style={{ height: "72px", width: "54px", objectFit: "cover" }}
                       />
-                      <div>
-                        <h6 className="mb-1">{selectedBook.title}</h6>
+                      <div className="overflow-hidden">
+                        <h6 className="mb-1 text-truncate">{selectedBook.title}</h6>
                         <div className="text-muted small mb-1">ISBN: {selectedBook.isbn}</div>
-                        <div className="text-primary">₹{selectedBook.price.toFixed(2)} per copy</div>
+                        <div className="text-primary">₹{(selectedBook.price || 0).toFixed(2)} per copy</div>
                       </div>
                     </div>
 
-                    <div className="nav nav-tabs mb-3">
+                    <div className="nav nav-tabs mb-3 flex-nowrap overflow-auto">
                       <button
-                        className={`nav-link ${paymentMethod === 'wallet' ? 'active' : ''}`}
+                        className={`nav-link flex-shrink-0 ${paymentMethod === 'wallet' ? 'active' : ''}`}
                         onClick={() => handlePaymentMethodChange('wallet')}
                       >
                         <i className="bx bx-wallet me-1"></i> Wallet
                         <span className="badge bg-label-success ms-2">₹{formatAmount(balance)}</span>
                       </button>
                       <button
-                        className={`nav-link ${paymentMethod === 'razorpay' ? 'active' : ''}`}
+                        className={`nav-link flex-shrink-0 ${paymentMethod === 'razorpay' ? 'active' : ''}`}
                         onClick={() => handlePaymentMethodChange('razorpay')}
                       >
                         <i className="bx bx-credit-card me-1"></i> Razorpay
@@ -518,8 +543,8 @@ const AuthorBookPurchase = () => {
                     )}
 
                     <div className="alert alert-light border mb-3">
-                      <div className="d-flex">
-                        <i className="bx bx-lock-alt text-muted me-2 fs-5"></i>
+                      <div className="d-flex align-items-start">
+                        <i className="bx bx-lock-alt text-muted me-2 fs-5 mt-1 flex-shrink-0"></i>
                         <small>Your payment information is encrypted and securely processed. This transaction is PCI DSS compliant.</small>
                       </div>
                     </div>
@@ -527,7 +552,7 @@ const AuthorBookPurchase = () => {
                 )}
               </div>
               {!orderSuccess && (
-                <div className="modal-footer">
+                <div className="modal-footer flex-wrap gap-2">
                   <button
                     type="button"
                     className="btn btn-outline-secondary"
@@ -561,16 +586,6 @@ const AuthorBookPurchase = () => {
       )}
     </div>
   );
-};
-
-// Mock data structure (for reference)
-const mockBookStructure = {
-  id: "book123",
-  title: "The Creative Process",
-  isbn: "978-1234567890",
-  coverImage: "/assets/img/covers/book1.jpg",
-  price: 299.99,
-  formats: ["Paperback", "Hardcover"]
 };
 
 export default AuthorBookPurchase;
