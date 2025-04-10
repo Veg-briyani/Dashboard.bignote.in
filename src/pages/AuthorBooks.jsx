@@ -1,4 +1,3 @@
- 
 import { useState, useEffect } from "react";
 import { StarFill } from "react-bootstrap-icons";
 import { getBookCover } from "../utils/imageUtils";
@@ -21,7 +20,7 @@ export const AuthorBooks = () => {
         const response = await fetch(getApiUrl("books"), {
           headers: { Authorization: `Bearer ${token}` },
         });
-        
+
         if (!response.ok) throw new Error("Failed to fetch books");
         const data = await response.json();
         setBooks(data.books);
@@ -36,6 +35,11 @@ export const AuthorBooks = () => {
 
     fetchBooks();
   }, []);
+
+  const handleOrderBookClick = () => {
+    console.log("Navigating to author-book-purchase page");
+    navigate("/author-book-purchase");
+  };
 
   const renderRating = (rating) => {
     return [...Array(5)].map((_, index) => (
@@ -77,7 +81,9 @@ export const AuthorBooks = () => {
             >
               <i className="bx bx-error-circle fs-3 me-3"></i>
               <div>
-                <h5 className="alert-heading mb-1">Unable to load your books</h5>
+                <h5 className="alert-heading mb-1">
+                  Unable to load your books
+                </h5>
                 <p className="mb-0 fw-light">{error}</p>
                 <button
                   className="btn btn-sm btn-outline-danger mt-3"
@@ -107,6 +113,7 @@ export const AuthorBooks = () => {
         <div className="col-md-4 d-flex justify-content-md-end mt-3 mt-md-0">
           <button
             className="btn btn-primary px-4 py-2 shadow-sm animate__animated animate__fadeIn animate__delay-2s"
+            onClick={handleOrderBookClick}
           >
             <i className="bx bx-shopping-bag me-2"></i> Order Book
           </button>
@@ -134,7 +141,7 @@ export const AuthorBooks = () => {
       ) : (
         <div className="row">
           {books.map((book, index) => (
-            <div key={book.id} className="col-12 mb-4">
+            <div key={book.id || index} className="col-12 mb-4">
               <div
                 className="card broad-card shadow-sm"
                 style={{ animationDelay: `${index * 0.1}s` }}
@@ -159,19 +166,20 @@ export const AuthorBooks = () => {
                         >
                           {book.title}
                         </h5>
-                        <div className="d-flex">{renderRating(book.publication.rating)}</div>
+                        <div className="d-flex">
+                          {renderRating(book.publication.rating)}
+                        </div>
                       </div>
                       <p className="card-text">
                         <small className="text-muted">
                           Published on{" "}
-                          {new Date(book.publication.publishedDate).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            }
-                          )}
+                          {new Date(
+                            book.publication.publishedDate
+                          ).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
                         </small>
                       </p>
                       <div className="mb-3">
@@ -199,7 +207,7 @@ export const AuthorBooks = () => {
                       </div>
                       <div className="marketplace-links d-flex flex-wrap gap-2 mb-3">
                         <a
-                          href={book.marketplaceLinks.amazon}
+                          href={book.marketplaceLinks?.amazon}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn btn-outline-dark btn-amazon"
@@ -207,7 +215,7 @@ export const AuthorBooks = () => {
                           <i className="fab fa-amazon me-2"></i>Amazon
                         </a>
                         <a
-                          href={book.marketplaceLinks.flipkart}
+                          href={book.marketplaceLinks?.flipkart}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn btn-outline-primary btn-flipkart"
@@ -217,15 +225,17 @@ export const AuthorBooks = () => {
                       </div>
                       <div className="performance-metrics d-flex flex-wrap bg-light rounded-4 p-3">
                         <div className="me-4">
-                          <div className="text-muted small mb-1">Sold Copies</div>
+                          <div className="text-muted small mb-1">
+                            Sold Copies
+                          </div>
                           <div className="h5 mb-0 text-success">
-                            {book.soldCopies.toLocaleString()}
+                            {(book.soldCopies || 0).toLocaleString()}
                           </div>
                         </div>
                         <div>
                           <div className="text-muted small mb-1">Earnings</div>
                           <div className="h5 mb-0 text-success">
-                            ₹{Number(book.royalties).toLocaleString()}
+                            ₹{Number(book.royalties || 0).toLocaleString()}
                           </div>
                         </div>
                       </div>
