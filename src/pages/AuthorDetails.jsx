@@ -167,57 +167,37 @@ export const AuthorDetails = () => {
     <div className="container-fluid px-3 px-md-4 py-4">
       {/* Profile Header */}
       <div className="card rounded-4 border-0 shadow-sm mb-4 overflow-hidden">
-        {/* Banner */}
+        {/* Enhanced Banner */}
         <div className="user-profile-header-banner position-relative">
           <div
             className="w-100 rounded-top"
             style={{
-              height: "200px",
+              height: "220px",
               background: "linear-gradient(135deg, #4e73df 0%, #224abe 100%)",
               position: "relative",
               overflow: "hidden",
+              boxShadow: "inset 0 0 40px rgba(0,0,0,0.1)"
             }}
           >
-            {/* SVG pattern overlay */}
-            <svg
-              width="100%"
-              height="100%"
-              xmlns="http://www.w3.org/2000/svg"
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                opacity: 0.1,
-              }}
-            >
-              <defs>
-                <pattern
-                  id="bookPattern"
-                  x="0"
-                  y="0"
-                  width="100"
-                  height="100"
-                  patternUnits="userSpaceOnUse"
-                >
-                  <path
-                    d="M30,10 L70,10 L70,90 L30,90 Z"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="2"
-                  />
-                  <path d="M30,20 L70,20" stroke="white" strokeWidth="1" />
-                  <path d="M30,30 L70,30" stroke="white" strokeWidth="1" />
-                  <path d="M30,40 L70,40" stroke="white" strokeWidth="1" />
-                  <path d="M30,50 L70,50" stroke="white" strokeWidth="1" />
-                  <path d="M30,60 L70,60" stroke="white" strokeWidth="1" />
-                  <path d="M30,70 L70,70" stroke="white" strokeWidth="1" />
-                  <path d="M30,80 L70,80" stroke="white" strokeWidth="1" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#bookPattern)" />
-            </svg>
+            {/* Animated particles */}
+            <div className="position-absolute w-100 h-100" style={{ overflow: "hidden" }}>
+              {[...Array(15)].map((_, i) => (
+                <div
+                  key={i}
+                  className="position-absolute bg-white rounded-circle"
+                  style={{
+                    width: `${Math.floor(Math.random() * 8) + 3}px`,
+                    height: `${Math.floor(Math.random() * 8) + 3}px`,
+                    top: `${Math.floor(Math.random() * 220)}px`,
+                    left: `${Math.floor(Math.random() * 100)}%`,
+                    opacity: Math.random() * 0.5 + 0.1,
+                    animation: `float ${Math.floor(Math.random() * 20) + 10}s linear infinite`,
+                  }}
+                />
+              ))}
+            </div>
 
-            {/* Floating book elements */}
+            {/* Enhanced book pattern overlay with more depth */}
             <svg
               width="100%"
               height="100%"
@@ -229,55 +209,192 @@ export const AuthorDetails = () => {
                 opacity: 0.15,
               }}
             >
-              <path d="M20,50 L40,45 L40,85 L20,90 Z" fill="white" />
-              <path d="M120,30 L140,25 L140,65 L120,70 Z" fill="white" />
-              <path d="M220,60 L240,55 L240,95 L220,100 Z" fill="white" />
-              <path d="M320,40 L340,35 L340,75 L320,80 Z" fill="white" />
+              <defs>
+                <pattern
+                  id="bookPattern"
+                  x="0"
+                  y="0"
+                  width="120"
+                  height="120"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <path
+                    d="M30,10 L90,10 L90,110 L30,110 Z"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="2"
+                  />
+                  <path d="M30,25 L90,25" stroke="white" strokeWidth="1" />
+                  <path d="M30,40 L90,40" stroke="white" strokeWidth="1" />
+                  <path d="M30,55 L90,55" stroke="white" strokeWidth="1" />
+                  <path d="M30,70 L90,70" stroke="white" strokeWidth="1" />
+                  <path d="M30,85 L90,85" stroke="white" strokeWidth="1" />
+                  <path d="M30,100 L90,100" stroke="white" strokeWidth="1" />
+                </pattern>
+                <linearGradient id="bookShine" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="white" stopOpacity="0.1" />
+                  <stop offset="50%" stopColor="white" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="white" stopOpacity="0.1" />
+                </linearGradient>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#bookPattern)" />
             </svg>
 
-            {/* Wave pattern at bottom */}
+            {/* Improved 3D floating book elements */}
             <svg
               width="100%"
-              height="40"
+              height="100%"
               xmlns="http://www.w3.org/2000/svg"
               style={{
                 position: "absolute",
-                bottom: 0,
+                top: 0,
                 left: 0,
-                opacity: 0.3,
+                opacity: 0.2,
+              }}
+            >
+              {/* Book 1 with shine effect */}
+              <g transform="translate(20,50) rotate(-5)">
+                <path d="M0,0 L60,0 L60,80 L0,80 Z" fill="#fff" fillOpacity="0.7" />
+                <path d="M0,0 L60,0 L60,80 L0,80 Z" fill="url(#bookShine)" />
+                <path d="M10,10 L50,10 M10,20 L50,20 M10,30 L50,30 M10,40 L50,40 M10,50 L40,50"
+                  stroke="white" strokeWidth="1" strokeOpacity="0.5" />
+              </g>
+              
+              {/* Book 2 */}
+              <g transform="translate(120,30) rotate(3)">
+                <path d="M0,0 L50,0 L50,70 L0,70 Z" fill="#fff" fillOpacity="0.6" />
+                <path d="M0,0 L50,0 L50,70 L0,70 Z" fill="url(#bookShine)" />
+                <path d="M10,10 L40,10 M10,20 L40,20 M10,30 L40,30 M10,40 L30,40"
+                  stroke="white" strokeWidth="1" strokeOpacity="0.5" />
+              </g>
+              
+              {/* Book 3 */}
+              <g transform="translate(220,60) rotate(-8)">
+                <path d="M0,0 L55,0 L55,75 L0,75 Z" fill="#fff" fillOpacity="0.6" />
+                <path d="M0,0 L55,0 L55,75 L0,75 Z" fill="url(#bookShine)" />
+                <path d="M10,15 L45,15 M10,30 L45,30 M10,45 L45,45 M10,60 L35,60"
+                  stroke="white" strokeWidth="1" strokeOpacity="0.5" />
+              </g>
+              
+              {/* Book 4 */}
+              <g transform="translate(320,40) rotate(5)">
+                <path d="M0,0 L45,0 L45,65 L0,65 Z" fill="#fff" fillOpacity="0.7" />
+                <path d="M0,0 L45,0 L45,65 L0,65 Z" fill="url(#bookShine)" />
+                <path d="M10,10 L35,10 M10,25 L35,25 M10,40 L35,40 M10,55 L25,55"
+                  stroke="white" strokeWidth="1" strokeOpacity="0.5" />
+              </g>
+            </svg>
+
+            {/* Enhanced wave pattern */}
+            <svg
+              preserveAspectRatio="none"
+              width="100%"
+              height="80"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 1200 120"
+              style={{
+                position: "absolute",
+                bottom: -1,
+                left: 0,
               }}
             >
               <path
-                d="M0,20 Q80,0 160,20 T320,20 T480,20 T640,20 T800,20 T960,20 T1120,20 V40 H0 Z"
+                d="M0,40 C320,100 520,0 720,50 C920,100 1120,20 1200,40 V120 H0 Z"
                 fill="white"
+                fillOpacity="0.85"
+              />
+              <path
+                d="M0,60 C280,120 520,30 720,80 C920,30 1020,80 1200,60 V120 H0 Z"
+                fill="white"
+                fillOpacity="0.6"
+              />
+              <path
+                d="M0,80 C240,100 480,60 720,90 C960,120 1120,90 1200,80 V120 H0 Z"
+                fill="white"
+                fillOpacity="1"
               />
             </svg>
           </div>
+          
+          {/* Add subtle animation css */}
+          <style jsx>{`
+            @keyframes float {
+              0% { transform: translateY(0px); }
+              50% { transform: translateY(-20px); }
+              100% { transform: translateY(0px); }
+            }
+          `}</style>
         </div>
         
         {/* Author Info with left-aligned photo */}
         <div className="card-body">
           <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-3">
-            {/* Profile Picture - Left aligned */}
+            {/* Profile Picture - Left aligned with enhanced styling */}
             <div className="position-relative mt-n5">
-              <img
-                src={authorData.profile.profilePhoto || "/assets/img/avatars/1.png"}
-                alt="Author"
-                className="rounded-circle border-4 border-white shadow"
-                style={{
-                  width: "110px",
-                  height: "110px",
-                  objectFit: "cover",
-                }}
-              />
+              <div className="profile-photo-container" style={{
+                width: "120px",
+                height: "120px",
+                position: "relative",
+              }}>
+                <img
+                  src={authorData.profile.profilePhoto || "/assets/img/avatars/1.png"}
+                  alt="Author"
+                  className="rounded-circle border-4 border-white shadow-lg"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    zIndex: 2,
+                    position: "relative"
+                  }}
+                />
+                {/* Decorative ring around profile photo - theme color */}
+                <div className="photo-ring" style={{
+                  position: "absolute",
+                  top: "-8px",
+                  left: "-8px",
+                  right: "-8px",
+                  bottom: "-8px",
+                  borderRadius: "50%",
+                  background: "#4e73df", /* Primary theme color */
+                  opacity: 0.7,
+                  zIndex: 1
+                }}></div>
+                
+                {/* Floating verification badge for verified authors */}
+                {authorData.kycStatus === "approved" && (
+                  <div className="position-absolute bg-success rounded-circle d-flex align-items-center justify-content-center shadow-sm" 
+                    style={{ 
+                      width: "32px", 
+                      height: "32px", 
+                      right: 0, 
+                      bottom: "5px", 
+                      border: "2px solid white",
+                      zIndex: 3 
+                    }}>
+                    <i className="bx bx-check text-white fs-5"></i>
+                  </div>
+                )}
+              </div>
             </div>
             
-            {/* Author Details */}
+            {/* Author Details with normal color name shifted right */}
             <div className="flex-grow-1 text-center text-md-start mt-2 mt-md-0">
-              <h2 className="fw-bold text-primary mb-1">{authorData.name}</h2>
+              <div className="d-flex justify-content-center justify-content-md-start ps-md-3">
+                <h2 className="fw-bold text-primary mb-3">
+                  {authorData.name}
+                </h2>
+              </div>
               
-              <div className="d-flex flex-wrap gap-2 justify-content-center justify-content-md-start mt-2 mb-2">
-                <div className="badge bg-primary rounded-pill px-3 py-2">
+              <p className="text-muted mb-3">
+                <i className="bx bx-map-pin me-1"></i>
+                {authorData.address?.city || "Location not specified"} • 
+
+
+              </p>
+              
+              <div className="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start mb-3">
+                <div className="badge bg-primary bg-opacity-85 rounded-pill px-3 py-2 shadow-sm">
                   <i className="bx bx-pen me-1"></i> Published Author
                 </div>
                 <div
@@ -285,27 +402,54 @@ export const AuthorDetails = () => {
                     authorData.kycStatus === "approved"
                       ? "bg-success"
                       : "bg-warning"
-                  } rounded-pill px-3 py-2`}
+                  } bg-opacity-85 rounded-pill px-3 py-2 shadow-sm`}
                 >
                   <i className="bx bx-check-circle me-1"></i>
                   {authorData.kycStatus === "approved"
                     ? "KYC Verified"
                     : "KYC Pending"}
                 </div>
+                
+                {/* Stats badges */}
+                {authorData.authorStats?.numberOfPublications > 0 && (
+                  <div className="badge bg-info bg-opacity-85 rounded-pill px-3 py-2 shadow-sm">
+                    <i className="bx bx-book me-1"></i>
+                    {authorData.authorStats.numberOfPublications} Publications
+                  </div>
+                )}
+                
+                {authorData.authorStats?.averageRating > 0 && (
+                  <div className="badge bg-warning text-dark bg-opacity-85 rounded-pill px-3 py-2 shadow-sm">
+                    <i className="bx bx-star me-1"></i>
+                    {authorData.authorStats.averageRating.toFixed(1)} Rating
+                  </div>
+                )}
               </div>
             </div>
             
-            {/* Edit Profile Button - Right aligned on desktop, centered on mobile */}
+            {/* Edit Profile Button with enhanced styling */}
             <div className="text-center text-md-end ms-md-auto">
               <button
-                className="btn btn-primary rounded-pill"
+                className="btn btn-primary rounded-pill shadow-sm hover-scale"
                 onClick={() => setShowEditModal(true)}
+                style={{
+                  background: "linear-gradient(45deg, #4e73df, #224abe)",
+                  border: "none",
+                  transition: "all 0.3s ease"
+                }}
               >
                 <i className="bx bx-edit me-2"></i> Edit Profile
               </button>
             </div>
           </div>
         </div>
+        
+        {/* Add hover effect for the button */}
+        <style jsx>{`
+          .hover-scale:hover {
+            transform: scale(1.05);
+          }
+        `}</style>
       </div>
 
       {/* Navigation Tabs */}
